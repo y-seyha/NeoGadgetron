@@ -12,10 +12,9 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { FcGoogle } from "react-icons/fc";
-import { FaFacebook, FaGithub } from "react-icons/fa";
 import type { AxiosError } from "axios";
 import { toast } from "sonner";
+import SocialButon from "@/components/Authentication/SocialButton";
 
 export default function Login() {
   const { login } = useAuth();
@@ -39,7 +38,7 @@ export default function Login() {
       toast.error(err.response?.data?.message || "Login failed"); // ✅ error toast
     } finally {
       setLoading(false);
-      setError(null)
+      setError(null);
     }
   };
 
@@ -112,46 +111,8 @@ export default function Login() {
               </div>
             </div>
 
-            {/* Social Buttons */}
-            <div className="grid gap-3 w-full">
-              <Button
-                variant="outline"
-                className="w-full h-11"
-                onClick={() =>
-                  window.open(
-                    `${import.meta.env.VITE_API_URL}/auth/google`,
-                    "_self",
-                  )
-                }
-              >
-                <FcGoogle size={20} /> Continue with Google
-              </Button>
-              <Button
-                variant="outline"
-                className="w-full h-11"
-                onClick={() =>
-                  window.open(
-                    `${import.meta.env.VITE_API_URL}/auth/facebook`,
-                    "_self",
-                  )
-                }
-              >
-                <FaFacebook size={20} className="text-blue-600" /> Continue with
-                Facebook
-              </Button>
-              <Button
-                variant="outline"
-                className="w-full h-11"
-                onClick={() =>
-                  window.open(
-                    `${import.meta.env.VITE_API_URL}/auth/github`,
-                    "_self",
-                  )
-                }
-              >
-                <FaGithub size={20} /> Continue with GitHub
-              </Button>
-            </div>
+            {/* Social Button  */}
+            <SocialButon />
 
             <p className="text-sm text-muted-foreground text-center">
               Don’t have an account?{" "}

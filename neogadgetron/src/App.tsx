@@ -8,6 +8,8 @@ import Login from "./pages/Authentication/Login";
 import Signup from "./pages/Authentication/Signup";
 import Unauthorized from "./pages/unauthorzied/Unauthorized";
 import NotFound from "./pages/unauthorzied/NotFound";
+import OAuthRedirect from "./pages/Authentication/OAuthRedirect";
+import Cart from "./pages/Cart";
 
 const App = () => {
   return (
@@ -41,15 +43,17 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+
+          <Route path="/oauth-redirect" element={<OAuthRedirect />} />
           {/* Authenticated Route  */}
-          {/* <Route
-            path="/dashboard"
+          <Route
+            path="/cart"
             element={
               <ProtectedRoute allowedRoles={["customer", "seller", "admin"]}>
-                <Dashboard />
+                <Cart />
               </ProtectedRoute>
             }
-          /> */}
+          />
           {/* Admin Route  */}
           {/* <Route
             path="/admin"

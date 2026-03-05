@@ -10,13 +10,11 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
-import { FcGoogle } from "react-icons/fc";
-import { FaGithub, FaFacebook } from "react-icons/fa";
 import React, { useState } from "react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import type { AxiosError } from "axios";
+import SocialButon from "@/components/Authentication/SocialButton";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -157,28 +155,7 @@ export default function Signup() {
             </div>
 
             {/* Social Signup */}
-            <div className="grid gap-3 w-full">
-              <Button
-                variant="outline"
-                className="w-full h-11 flex items-center gap-2"
-              >
-                <FcGoogle size={20} />
-                Continue with Google
-              </Button>
-
-              <Button variant="outline" className="w-full h-11">
-                <FaFacebook size={20} className="text-blue-600" /> Continue with
-                Facebook
-              </Button>
-
-              <Button
-                variant="outline"
-                className="w-full h-11 flex items-center gap-2"
-              >
-                <FaGithub size={20} />
-                Continue with GitHub
-              </Button>
-            </div>
+            <SocialButon />
 
             <p className="text-sm text-muted-foreground text-center">
               Already have an account?{" "}

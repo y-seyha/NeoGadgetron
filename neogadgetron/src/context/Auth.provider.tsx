@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, type ReactNode, useRef } from "react";
 import axiosInstance from "@/utils/axiosInstance";
 import { AuthContext, type AuthContextType } from "./Auth.context";
@@ -26,7 +25,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setIsAuthenticated(true);
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
-        const axiosErr = err; 
+        const axiosErr = err;
         if (axiosErr.response?.status === 401) {
           setUser(null);
           setIsAuthenticated(false);
@@ -52,6 +51,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       refreshUser();
     }
   }, []);
+  //   useEffect(() => {
+  //   if (!hasRefreshed.current && window.location.pathname !== "/oauth-redirect") {
+  //     hasRefreshed.current = true;
+  //     refreshUser();
+  //   }
+  // }, []);
 
   // Login
   const login = async (email: string, password: string) => {

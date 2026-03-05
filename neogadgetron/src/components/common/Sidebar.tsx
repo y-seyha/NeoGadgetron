@@ -13,8 +13,8 @@ import { toast } from "sonner";
 import type { AxiosError } from "axios";
 
 const sidebarLinks = [
-  { name: "Dashboard", icon: Home, path: "/dashboard" },
-  { name: "Products", icon: Package, path: "/products" },
+  { name: "Home", icon: Home, path: "/" },
+  { name: "Cart", icon: Package, path: "/cart" },
   { name: "Orders", icon: ShoppingCart, path: "/orders" },
   { name: "Customers", icon: Users, path: "/customers" },
   { name: "Reports", icon: BarChart2, path: "/reports" },
