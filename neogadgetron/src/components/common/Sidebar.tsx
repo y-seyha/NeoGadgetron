@@ -1,4 +1,4 @@
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import {
   Home,
   Package,
@@ -8,6 +8,9 @@ import {
   ShoppingCart,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
+import { toast } from "sonner";
+import type { AxiosError } from "axios";
 
 const sidebarLinks = [
   { name: "Dashboard", icon: Home, path: "/dashboard" },
@@ -30,6 +33,21 @@ export default function Sidebar({
   setMobileSidebarOpen,
 }: SidebarProps) {
   const location = useLocation();
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      toast.success("Logged out successfully");
+      navigate("/login");
+    } catch (error) {
+      const err = error as AxiosError<{ message: string }>;
+      toast.error(err.response?.data?.message || "Logout failed");
+    } finally {
+      setMobileSidebarOpen(false);
+    }
+  };
 
   // Desktop sidebar
   const desktopSidebar = (
@@ -62,7 +80,12 @@ export default function Sidebar({
         {/* Bottom logout only when sidebarOpen is true */}
         {sidebarOpen && (
           <div className="px-4 py-4 border-t">
-            <Button variant="outline" size="sm" className="w-full">
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full"
+              onClick={handleLogout}
+            >
               Logout
             </Button>
           </div>
@@ -109,7 +132,7 @@ export default function Sidebar({
               variant="outline"
               size="sm"
               className="w-full"
-              onClick={() => setMobileSidebarOpen(false)}
+              onClick={handleLogout}
             >
               Logout
             </Button>

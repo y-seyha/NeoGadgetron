@@ -1,4 +1,6 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,8 +14,35 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook, FaGithub } from "react-icons/fa";
+import type { AxiosError } from "axios";
+import { toast } from "sonner";
 
 export default function Login() {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      await login(email, password);
+      toast.success(`Welcome back, ${email}!`); // ✅ success toast
+      navigate("/");
+    } catch (error) {
+      const err = error as AxiosError<{ message: string }>;
+      toast.error(err.response?.data?.message || "Login failed"); // ✅ error toast
+    } finally {
+      setLoading(false);
+      setError(null)
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-muted/40 to-muted px-4">
       <Card className="w-full max-w-md shadow-2xl border-muted/60 backdrop-blur-sm">
@@ -22,15 +51,21 @@ export default function Login() {
           <CardDescription>Sign in to continue to your account</CardDescription>
         </CardHeader>
 
-        <form>
+        <form onSubmit={handleSubmit}>
           <CardContent className="space-y-6">
+            {error && (
+              <p className="text-red-600 text-center text-sm">{error}</p>
+            )}
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="m@example.com"
+                placeholder="email@gmail.com"
                 className="h-11"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
               />
             </div>
 
@@ -44,12 +79,26 @@ export default function Login() {
                   Forgot?
                 </Link>
               </div>
-              <Input id="password" type="password" className="h-11" />
+              <Input
+                id="password"
+                type="password"
+                className="h-11"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="password"
+                required
+              />
             </div>
           </CardContent>
 
           <CardFooter className="flex flex-col gap-5 space-y-2">
-            <Button className="w-full h-11 text-base">Login</Button>
+            <Button
+              type="submit"
+              className="w-full h-11 text-base"
+              disabled={loading}
+            >
+              {loading ? "Logging in..." : "Login"}
+            </Button>
 
             {/* Divider */}
             <div className="relative w-full">
@@ -65,14 +114,41 @@ export default function Login() {
 
             {/* Social Buttons */}
             <div className="grid gap-3 w-full">
-              <Button variant="outline" className="w-full h-11">
+              <Button
+                variant="outline"
+                className="w-full h-11"
+                onClick={() =>
+                  window.open(
+                    `${import.meta.env.VITE_API_URL}/auth/google`,
+                    "_self",
+                  )
+                }
+              >
                 <FcGoogle size={20} /> Continue with Google
               </Button>
-              <Button variant="outline" className="w-full h-11">
+              <Button
+                variant="outline"
+                className="w-full h-11"
+                onClick={() =>
+                  window.open(
+                    `${import.meta.env.VITE_API_URL}/auth/facebook`,
+                    "_self",
+                  )
+                }
+              >
                 <FaFacebook size={20} className="text-blue-600" /> Continue with
                 Facebook
               </Button>
-              <Button variant="outline" className="w-full h-11">
+              <Button
+                variant="outline"
+                className="w-full h-11"
+                onClick={() =>
+                  window.open(
+                    `${import.meta.env.VITE_API_URL}/auth/github`,
+                    "_self",
+                  )
+                }
+              >
                 <FaGithub size={20} /> Continue with GitHub
               </Button>
             </div>

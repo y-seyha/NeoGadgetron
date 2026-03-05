@@ -19,6 +19,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import { useAuth } from "../../hooks/useAuth";
+import { getInitials } from "@/utils/helper";
 
 type NavbarProps = {
   sidebarOpen: boolean;
@@ -34,6 +36,7 @@ export default function Navbar({
   setMobileSidebarOpen,
 }: NavbarProps) {
   const { setTheme } = useTheme();
+  const { user, isAuthenticated, logout, isLoading } = useAuth();
   return (
     <header className="flex items-center justify-between h-16 px-6 bg-background border-b sticky top-0 z-50">
       <div className="flex items-center gap-4">
@@ -104,16 +107,52 @@ export default function Navbar({
             2
           </span>
         </Link>
-        <Link to="/login">
-          <Button
-            variant="outline"
-            size="sm"
-            className="flex items-center gap-2"
-          >
-            <User className="h-4 w-4" />
-            Login
-          </Button>
-        </Link>
+        {isLoading ? (
+          <div>Loading...</div>
+        ) : isAuthenticated && user ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex items-center gap-2"
+              >
+                <div
+                  className="
+    h-6 w-6 rounded-full 
+    bg-primary text-white 
+    dark:bg-muted-foreground dark:text-muted 
+    flex items-center justify-center 
+    text-xs font-semibold
+  "
+                >
+                  {getInitials(`${user.first_name} ${user.last_name}`)}
+                </div>
+                <span>{user.first_name}</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem asChild>
+                <Link to="/profile">Edit Profile</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/settings">Settings</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <Link to="/login">
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-2"
+            >
+              <User className="h-4 w-4" />
+              Login
+            </Button>
+          </Link>
+        )}
       </div>
     </header>
   );
