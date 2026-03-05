@@ -10,52 +10,54 @@ import Unauthorized from "./pages/unauthorzied/Unauthorized";
 import NotFound from "./pages/unauthorzied/NotFound";
 import OAuthRedirect from "./pages/Authentication/OAuthRedirect";
 import Cart from "./pages/Cart";
+import { CartItemProvider } from "./context/CartItem.provider";
 
 const App = () => {
   return (
     <AuthProvider>
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-        <Routes>
-          {/* Public Routes  */}
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <Homepage />
-              </ProtectedRoute>
-            }
-          />
+      <CartItemProvider>
+        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+          <Routes>
+            {/* Public Routes  */}
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <Homepage />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path="/login"
-            element={
-              <ProtectedRoute guestOnly>
-                <Login />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path="/login"
+              element={
+                <ProtectedRoute guestOnly>
+                  <Login />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path="/register"
-            element={
-              <ProtectedRoute guestOnly>
-                <Signup />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path="/register"
+              element={
+                <ProtectedRoute guestOnly>
+                  <Signup />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route path="/oauth-redirect" element={<OAuthRedirect />} />
-          {/* Authenticated Route  */}
-          <Route
-            path="/cart"
-            element={
-              <ProtectedRoute allowedRoles={["customer", "seller", "admin"]}>
-                <Cart />
-              </ProtectedRoute>
-            }
-          />
-          {/* Admin Route  */}
-          {/* <Route
+            <Route path="/oauth-redirect" element={<OAuthRedirect />} />
+            {/* Authenticated Route  */}
+            <Route
+              path="/cart"
+              element={
+                <ProtectedRoute allowedRoles={["customer", "seller", "admin"]}>
+                  <Cart />
+                </ProtectedRoute>
+              }
+            />
+            {/* Admin Route  */}
+            {/* <Route
             path="/admin"
             element={
               <ProtectedRoute allowedRoles={["admin"]}>
@@ -64,13 +66,14 @@ const App = () => {
             }
           /> */}
 
-          {/* System Route  */}
-          <Route path="/unauthorized" element={<Unauthorized />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+            {/* System Route  */}
+            <Route path="/unauthorized" element={<Unauthorized />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
 
-        <Toaster position="bottom-right" richColors />
-      </ThemeProvider>
+          <Toaster position="bottom-right" richColors />
+        </ThemeProvider>{" "}
+      </CartItemProvider>
     </AuthProvider>
   );
 };
