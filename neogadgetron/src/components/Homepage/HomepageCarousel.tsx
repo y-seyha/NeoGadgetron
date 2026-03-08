@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Carousel,
   CarouselContent,
@@ -7,9 +6,9 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
-import banner1 from "@/assets/ecommerce1.png";
-import banner2 from "@/assets/ecommerce2.png";
-import banner3 from "@/assets/ecommerce3.png";
+import banner1 from "@/assets/C05.avif";
+import banner2 from "@/assets/Co2.jpg";
+import banner3 from "@/assets/Co3.jpg";
 
 const banners = [
   {
@@ -50,7 +49,7 @@ const HomepageCarousel = () => {
           {banners.map((banner) => (
             <CarouselItem key={banner.id}>
               <div
-                className="relative w-full h-96 bg-gray-200"
+                className="relative w-full h-100 bg-gray-200"
                 style={{
                   backgroundImage: `url(${banner.image})`,
                   backgroundSize: "cover",
@@ -68,7 +67,11 @@ const HomepageCarousel = () => {
                     </p>
                   )}
                   {banner.cta && (
-                    <Button size="lg" className="bg-primary text-white">
+                    <Button
+                      size="lg"
+                      variant={"ghost"}
+                      className="bg-primary text-white"
+                    >
                       {banner.cta}
                     </Button>
                   )}

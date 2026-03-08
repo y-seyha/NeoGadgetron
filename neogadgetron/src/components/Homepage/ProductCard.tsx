@@ -2,42 +2,55 @@ import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
-import banner3 from "@/assets/ecommerce3.png";
-
-export interface Product {
-  id: number;
-  name: string;
-  description: string;
-  price: string;
-  stock: number;
-  category_id: number;
-  category_name?: string; // add category name
-  created_at: string;
-  updated_at: string;
-  image_url: string | null;
-  image_public_id: string | null;
-}
+import noImg from "@/assets/noimg.webp";
+import type { Product } from "@/types";
+import { useCart } from "@/hooks/useCart";
+import axios from "axios";
 
 interface ProductCardProps {
   product: Product;
-  onAddToCart?: (product: Product) => void;
-  onToggleFavorite?: (product: Product) => void; // optional heart click
+  onToggleFavorite?: (product: Product) => void;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
   product,
-  onAddToCart,
   onToggleFavorite,
 }) => {
-  //   const placeholderImage = "/images/placeholder.png"; // fallback image
+  const { addToCart } = useCart();
 
+  const handleAddToCart = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/v1/cart-items",
+        {
+          product_id: product.id,
+          quantity: 1,
+        },
+        { withCredentials: true },
+      );
+
+      const cartItemFromBackend = response.data; // contains id, cart_id, product_id, quantity, etc.
+
+      addToCart({
+        id: cartItemFromBackend.id, // << use real cart_items.id
+        cartId: cartItemFromBackend.cart_id,
+        productId: cartItemFromBackend.product_id,
+        quantity: cartItemFromBackend.quantity,
+        name: product.name,
+        price: Number(product.price),
+        image: product.image_url || "",
+      });
+    } catch (err) {
+      console.error("Failed to add to cart:", err);
+    }
+  };
   return (
     <Card className="hover:shadow-lg hover:scale-105 transition-transform duration-300">
       <CardContent className="flex flex-col p-4">
         {/* Image + Heart */}
         <div className="relative w-full h-48">
           <img
-            src={product.image_url || banner3}
+            src={product.image_url || noImg}
             alt={product.name}
             className="w-full h-full object-cover rounded-lg"
           />
@@ -77,10 +90,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
           {/* Add to Cart button */}
           {product.stock > 0 ? (
-            <Button
-              className="ml-4"
-              onClick={() => onAddToCart && onAddToCart(product)}
-            >
+            <Button className="ml-4" onClick={handleAddToCart}>
               Add to Cart
             </Button>
           ) : (

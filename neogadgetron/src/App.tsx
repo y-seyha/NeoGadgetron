@@ -8,14 +8,15 @@ import Login from "./pages/Authentication/Login";
 import Signup from "./pages/Authentication/Signup";
 import Unauthorized from "./pages/unauthorzied/Unauthorized";
 import NotFound from "./pages/unauthorzied/NotFound";
-import OAuthRedirect from "./pages/Authentication/OAuthRedirect";
+import { CartProvider } from "./context/CartProvider";
 import Cart from "./pages/Cart";
-import { CartItemProvider } from "./context/CartItem.provider";
+import OAuthRedirect from "./pages/Authentication/OAuthRedirect";
+import Order from "./pages/Order";
 
 const App = () => {
   return (
     <AuthProvider>
-      <CartItemProvider>
+      <CartProvider>
         <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
           <Routes>
             {/* Public Routes  */}
@@ -56,6 +57,15 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
+
+            <Route
+              path="/orders"
+              element={
+                <ProtectedRoute allowedRoles={["customer", "seller", "admin"]}>
+                  <Order />
+                </ProtectedRoute>
+              }
+            />
             {/* Admin Route  */}
             {/* <Route
             path="/admin"
@@ -73,7 +83,7 @@ const App = () => {
 
           <Toaster position="bottom-right" richColors />
         </ThemeProvider>{" "}
-      </CartItemProvider>
+      </CartProvider>
     </AuthProvider>
   );
 };

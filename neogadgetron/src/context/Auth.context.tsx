@@ -1,4 +1,3 @@
-
 import { createContext } from "react";
 
 export interface User {
@@ -12,7 +11,7 @@ export interface User {
 export interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
-  isLoading: boolean; 
+  isLoading: boolean;
 }
 
 export interface AuthContextType extends AuthState {
@@ -24,7 +23,7 @@ export interface AuthContextType extends AuthState {
     first_name: string;
     last_name: string;
   }) => Promise<void>;
-  refreshUser: () => Promise<void>; 
+  refreshUser: () => Promise<void>;
 }
 
 // default context
