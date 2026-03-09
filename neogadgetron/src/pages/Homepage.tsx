@@ -1,3 +1,4 @@
+import Footer from "@/components/common/Footer";
 import FeaturedCategories from "@/components/Homepage/FeaturedCategories";
 import FeaturedProductsCarousel from "@/components/Homepage/FeaturedProductsCarousel";
 import HomepageCarousel from "@/components/Homepage/HomepageCarousel";
@@ -27,6 +28,8 @@ const Homepage = () => {
 
         <WhyChooseUs />
       </div>
+
+      <Footer />
     </MainLayout>
   );
 };

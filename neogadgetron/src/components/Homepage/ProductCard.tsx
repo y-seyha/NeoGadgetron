@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
@@ -17,6 +17,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   onToggleFavorite,
 }) => {
   const { addToCart } = useCart();
+  const [added, setAdded] = useState(false);
 
   const handleAddToCart = async () => {
     try {
@@ -29,10 +30,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
         { withCredentials: true },
       );
 
-      const cartItemFromBackend = response.data; // contains id, cart_id, product_id, quantity, etc.
+      const cartItemFromBackend = response.data; 
 
       addToCart({
-        id: cartItemFromBackend.id, // << use real cart_items.id
+        id: cartItemFromBackend.id, 
         cartId: cartItemFromBackend.cart_id,
         productId: cartItemFromBackend.product_id,
         quantity: cartItemFromBackend.quantity,
@@ -40,6 +41,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         price: Number(product.price),
         image: product.image_url || "",
       });
+      setAdded(true);
     } catch (err) {
       console.error("Failed to add to cart:", err);
     }
@@ -60,6 +62,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
           >
             <Heart className="h-5 w-5 text-red-500" />
           </button>
+          {added && (
+            <span className="absolute top-2 left-2 bg-green-600 text-white text-xs font-bold px-2 py-1 rounded-lg shadow-lg">
+              Added
+            </span>
+          )}
         </div>
 
         {/* Product Name */}

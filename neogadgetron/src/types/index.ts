@@ -16,7 +16,7 @@ export interface Product {
   price: number;
   stock: number;
   category_id: number;
-  category_name?: string; // optional
+  category_name?: string;
   created_at: string;
   updated_at: string;
   image_url: string | null;
@@ -28,4 +28,34 @@ export interface Shipping {
   city: string;
   province: string;
   postalCode: string;
+}
+
+export interface UserProfile {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string | null;
+  role: string;
+  is_verified: boolean;
+}
+
+export interface Review {
+  id: number;
+  rating: number;
+  comment: string;
+  created_at: string;
+  user?: {
+    id: number;
+    first_name: string;
+    last_name: string;
+    email?: string;
+  };
+  product?: {
+    id: number;
+    name: string;
+    price: string;
+    stock: number;
+    image: string;
+  };
 }

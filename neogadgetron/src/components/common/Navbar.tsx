@@ -21,6 +21,7 @@ import {
 } from "../ui/dropdown-menu";
 import { useAuth } from "../../hooks/useAuth";
 import { getInitials } from "@/utils/helper";
+import { useCart } from "@/hooks/useCart";
 
 type NavbarProps = {
   sidebarOpen: boolean;
@@ -37,6 +38,7 @@ export default function Navbar({
 }: NavbarProps) {
   const { setTheme } = useTheme();
   const { user, isAuthenticated, logout, isLoading } = useAuth();
+  const { totalQuantity } = useCart();
   return (
     <header className="flex items-center justify-between h-16 px-6 bg-background border-b sticky top-0 z-50">
       <div className="flex items-center gap-4">
@@ -103,8 +105,8 @@ export default function Navbar({
         </Link>
         <Link to="/cart" className="relative">
           <ShoppingCart className="h-5 w-5" />
-          <span className="absolute -top-2 -right-2 text-xs bg-primary text-white rounded-full px-1.5 py-0.5">
-            2
+          <span className="absolute -top-2 -right-2 text-xs bg-primary text-white rounded-full px-1.5 py-0.5 dark:text-black">
+            {totalQuantity}
           </span>
         </Link>
         {isLoading ? (

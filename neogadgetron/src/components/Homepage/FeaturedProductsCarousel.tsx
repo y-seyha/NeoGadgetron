@@ -37,7 +37,14 @@ const FeaturedProductCarousel = () => {
                     <p className="text-sm text-muted-foreground">
                       {prod.price}
                     </p>
-                    <Button className="mt-2 w-full">Add to Cart</Button>
+                    <Button
+                      className="mt-2 w-full"
+                      onClick={() => {
+                        alert("Bruh, This one only for decoration");
+                      }}
+                    >
+                      Add to Cart
+                    </Button>
                   </CardContent>
                 </Card>
               </CarouselItem>

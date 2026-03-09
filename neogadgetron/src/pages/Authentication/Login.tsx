@@ -31,11 +31,11 @@ export default function Login() {
 
     try {
       await login(email, password);
-      toast.success(`Welcome back, ${email}!`); // ✅ success toast
+      toast.success(`Welcome back, ${email}!`);
       navigate("/");
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;
-      toast.error(err.response?.data?.message || "Login failed"); // ✅ error toast
+      toast.error(err.response?.data?.message || "Login failed"); 
     } finally {
       setLoading(false);
       setError(null);

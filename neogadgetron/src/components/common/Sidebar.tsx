@@ -13,10 +13,11 @@ import { toast } from "sonner";
 import type { AxiosError } from "axios";
 
 const sidebarLinks = [
+  { name: "Profile", icon: Users, path: "/profile" },
   { name: "Home", icon: Home, path: "/" },
   { name: "Cart", icon: Package, path: "/cart" },
   { name: "Orders", icon: ShoppingCart, path: "/orders" },
-  { name: "Customers", icon: Users, path: "/customers" },
+  { name: "Review", icon: Users, path: "/review" },
   { name: "Reports", icon: BarChart2, path: "/reports" },
   { name: "Settings", icon: Settings, path: "/settings" },
 ];
@@ -64,11 +65,13 @@ export default function Sidebar({
               <Link
                 key={link.name}
                 to={link.path}
-                className={`flex items-center gap-3 px-4 py-3 text-sm rounded-lg transition hover:bg-muted ${
-                  isActive
-                    ? "bg-primary text-white font-semibold"
-                    : "text-muted-foreground"
-                }`}
+                className={`flex items-center gap-3 px-4 py-3 text-sm rounded-lg transition
+  hover:bg-muted dark:hover:bg-gray-700
+  ${
+    isActive
+      ? "bg-primary text-white font-semibold dark:bg-primary-dark dark:text-gray-900"
+      : "text-muted-foreground dark:text-gray-300"
+  }`}
               >
                 <link.icon className="h-5 w-5" />
                 {sidebarOpen && <span>{link.name}</span>}

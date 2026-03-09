@@ -1,4 +1,4 @@
-// src/utils/axiosInstance.ts
+
 import axios from "axios";
 import { API_BASE_URL } from "./apiPath";
 
@@ -10,7 +10,7 @@ const axiosInstance = axios.create({
   },
 });
 
-// Optional: request interceptor (if you want to add tokens later)
+// request interceptor (if you want to add tokens later)
 axiosInstance.interceptors.request.use(
   (config) => {
     // Example: attach Authorization header if token exists

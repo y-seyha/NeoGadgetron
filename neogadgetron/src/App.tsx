@@ -12,6 +12,8 @@ import { CartProvider } from "./context/CartProvider";
 import Cart from "./pages/Cart";
 import OAuthRedirect from "./pages/Authentication/OAuthRedirect";
 import Order from "./pages/Order";
+import Profile from "./pages/Profile";
+import Review from "./pages/Review";
 
 const App = () => {
   return (
@@ -63,6 +65,24 @@ const App = () => {
               element={
                 <ProtectedRoute allowedRoles={["customer", "seller", "admin"]}>
                   <Order />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute allowedRoles={["customer", "seller", "admin"]}>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/review"
+              element={
+                <ProtectedRoute allowedRoles={["customer", "seller", "admin"]}>
+                  <Review />
                 </ProtectedRoute>
               }
             />

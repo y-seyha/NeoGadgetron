@@ -70,7 +70,7 @@ const HomepageCarousel = () => {
                     <Button
                       size="lg"
                       variant={"ghost"}
-                      className="bg-primary text-white"
+                      className="bg-primary text-white dark:bg-black"
                     >
                       {banner.cta}
                     </Button>
@@ -81,7 +81,7 @@ const HomepageCarousel = () => {
           ))}
         </CarouselContent>
 
-        {/* Optional navigation arrows */}
+        {/*  navigation arrows */}
         <CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2 bg-white rounded-full shadow p-2 hover:bg-gray-100 z-10" />
         <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 bg-white rounded-full shadow p-2 hover:bg-gray-100 z-10" />
       </Carousel>
