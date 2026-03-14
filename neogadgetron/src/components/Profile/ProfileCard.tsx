@@ -1,5 +1,3 @@
-
-
 import ProfileField from "./ProfileField";
 import EditProfileModal from "./EditProfileModal";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -22,10 +20,17 @@ export default function ProfileCard({
 }: ProfileCardProps) {
   return (
     <Card className="p-4 sm:p-5 my-2">
-      <CardHeader>
+      <CardHeader className="flex justify-between">
         <CardTitle className="text-lg sm:text-xl text-gray-900 dark:text-gray-100">
           Profile Info
         </CardTitle>
+        <EditProfileModal
+          profile={profile}
+          isOpen={isModalOpen}
+          setIsOpen={setIsModalOpen}
+          onSave={handleSave}
+          saving={saving}
+        />
       </CardHeader>
 
       <CardContent className="space-y-4">
@@ -37,14 +42,6 @@ export default function ProfileCard({
         <ProfileField
           label="Verified"
           value={profile.is_verified ? "Yes" : "No"}
-        />
-
-        <EditProfileModal
-          profile={profile}
-          isOpen={isModalOpen}
-          setIsOpen={setIsModalOpen}
-          onSave={handleSave}
-          saving={saving}
         />
       </CardContent>
     </Card>

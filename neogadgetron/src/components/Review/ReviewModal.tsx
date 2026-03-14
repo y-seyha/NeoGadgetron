@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -75,9 +74,18 @@ const AddReviewModal: React.FC<Props> = ({
     const timer = setTimeout(updateState, 0); // run after current render
     return () => clearTimeout(timer);
   }, [reviewToEdit, onProductChange]);
+  useEffect(() => {
+    if (!reviewToEdit && products.length) {
+      onProductChange(products[0].id);
+    }
+  }, [products, reviewToEdit, onProductChange]);
 
   const submitReview = async () => {
     try {
+      if (!selectedProductId) {
+        toast.error("Please select a product");
+        return;
+      }
       if (reviewToEdit) {
         // Update
         await axios.put(

@@ -1,5 +1,3 @@
-
-
 import { useState } from "react";
 import {
   Dialog,
@@ -49,16 +47,18 @@ export default function EditProfileModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button
-          onClick={() => setEditProfile(profile)}
-          className="w-full sm:w-auto"
-        >
-          Edit Profile
-        </Button>
-      </DialogTrigger>
+      <div className="flex justify-center sm:justify-start">
+        <DialogTrigger asChild>
+          <Button
+            onClick={() => setEditProfile(profile)}
+            className="w-full sm:w-fit px-4"
+          >
+            Edit Profile
+          </Button>
+        </DialogTrigger>
+      </div>
 
-      <DialogContent className="sm:max-w-md w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+      <DialogContent className="sm:max-w-md w-full bg-white dark:bg-black text-gray-900 dark:text-gray-100">
         <DialogHeader>
           <DialogTitle>Edit Profile</DialogTitle>
         </DialogHeader>
@@ -77,7 +77,7 @@ export default function EditProfileModal({
                 onChange={(e) =>
                   handleChange(field as keyof UserProfile, e.target.value)
                 }
-                className="w-full bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                className="w-full bg-gray-50 dark:bg-black text-gray-900 dark:text-gray-100"
               />
             </div>
           ))}

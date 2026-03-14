@@ -20,6 +20,7 @@ const App = () => {
     <AuthProvider>
       <CartProvider>
         <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+          <Toaster position="bottom-right" richColors />
           <Routes>
             {/* Public Routes  */}
             <Route
@@ -50,6 +51,8 @@ const App = () => {
             />
 
             <Route path="/oauth-redirect" element={<OAuthRedirect />} />
+
+            
             {/* Authenticated Route  */}
             <Route
               path="/cart"
@@ -100,8 +103,6 @@ const App = () => {
             <Route path="/unauthorized" element={<Unauthorized />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
-
-          <Toaster position="bottom-right" richColors />
         </ThemeProvider>{" "}
       </CartProvider>
     </AuthProvider>

@@ -46,7 +46,7 @@ export default function Signup() {
         email: form.email,
         password: form.password,
       });
-      toast("Acccount created successfully");
+      toast.success("Acccount created successfully");
       navigate("/");
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;
@@ -125,7 +125,7 @@ export default function Signup() {
                 id="confirmedPassword"
                 value={form.confirmedPassword}
                 onChange={handleChange}
-                type="confirmedPassword"
+                type="password"
                 className="h-11"
               />
             </div>

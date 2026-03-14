@@ -10,16 +10,16 @@ export default function OAuthRedirect() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        await refreshUser();
-        toast.success("Login successful!");
-        navigate("/", { replace: true });
+        await refreshUser(); //  fetches user using cookie
+        // toast.success("Login successful!");
+        navigate("/", { replace: true }); // go to homepage
       } catch {
         toast.error("Login failed. Please try again.");
         navigate("/login", { replace: true });
       }
     };
     fetchUser();
-  }, []);
+  }, [refreshUser, navigate]);
 
   return (
     <div className="min-h-screen flex items-center justify-center">
