@@ -14,6 +14,7 @@ import OAuthRedirect from "./pages/Authentication/OAuthRedirect";
 import Order from "./pages/Order";
 import Profile from "./pages/Profile";
 import Review from "./pages/Review";
+import OAuthSuccess from "./pages/Authentication/OAuthRedirect";
 
 const App = () => {
   return (
@@ -52,7 +53,6 @@ const App = () => {
 
             <Route path="/oauth-redirect" element={<OAuthRedirect />} />
 
-            
             {/* Authenticated Route  */}
             <Route
               path="/cart"
@@ -89,6 +89,8 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
+
+            <Route path="/oauth-success" element={<OAuthSuccess />} />
             {/* Admin Route  */}
             {/* <Route
             path="/admin"

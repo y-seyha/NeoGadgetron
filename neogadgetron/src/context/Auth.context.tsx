@@ -1,32 +1,35 @@
+// AuthContext.tsx
 import { createContext } from "react";
 
 export interface User {
-  id: string;
+  id: number;
   email: string;
+  name: string;
   role: string;
-  first_name?: string;
-  last_name?: string;
+  avatar_url?: string;
+  email_verified?: boolean;
 }
 
-export interface AuthState {
+export interface AuthContextType {
   user: User | null;
+  loading: boolean;
+  login: (email: string, password: string) => Promise<void>;
+  signup: (
+    name: string,
+    email: string,
+    password: string,
+    role?: string,
+  ) => Promise<string>;
+  logout: () => Promise<void>;
+  googleLogin?: () => void;
+  facebookLogin?: () => void;
+  githubLogin?: () => void;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  setAccessToken: React.Dispatch<React.SetStateAction<string | null>>;
   isAuthenticated: boolean;
   isLoading: boolean;
 }
 
-export interface AuthContextType extends AuthState {
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
-  register: (data: {
-    email: string;
-    password: string;
-    first_name: string;
-    last_name: string;
-  }) => Promise<void>;
-  refreshUser: () => Promise<void>;
-}
-
-// default context
 export const AuthContext = createContext<AuthContextType | undefined>(
   undefined,
 );

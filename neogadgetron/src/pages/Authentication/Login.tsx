@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -17,7 +17,7 @@ import SocialButon from "@/components/Authentication/SocialButton";
 import { toast } from "sonner";
 
 export default function Login() {
-  const { login, isAuthenticated, user } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -25,21 +25,15 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (isAuthenticated && user) {
-      toast.success(`Welcome back, ${user.email}!`, { duration: 2000 });
-      navigate("/");
-    }
-  }, [isAuthenticated, user, navigate]);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError("");
 
     try {
-      await login(email, password); // login now refreshes user internally
-      toast.success(`Welcome back, ${email}!`, { duration: 2000 });
-      setTimeout(() => navigate("/"), 500); // optional delay for toast
+      await login(email, password);
+      // toast.success(`Welcome back, ${email}!`, { duration: 2000 });
+      navigate("/");
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;
       toast.error(err.response?.data?.message || "Login failed");

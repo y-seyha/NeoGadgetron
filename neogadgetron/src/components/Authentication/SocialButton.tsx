@@ -2,10 +2,15 @@ import { Button } from "@/components/ui/button";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook, FaGithub } from "react-icons/fa";
 
-export default function SocialButon() {
+export default function SocialButton() {
   const API = import.meta.env.VITE_API_URL;
 
   const handleRedirect = (provider: string) => {
+    if (!API) {
+      console.error("API URL not defined");
+      return;
+    }
+
     window.location.href = `${API}/auth/${provider}`;
   };
 

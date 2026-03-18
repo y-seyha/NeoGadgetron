@@ -1,107 +1,148 @@
-import React, { useState, useEffect, type ReactNode, useRef } from "react";
-import axiosInstance from "@/utils/axiosInstance";
-import { AuthContext, type AuthContextType } from "./Auth.context";
-import { AUTH_API, USER_API } from "@/utils/apiPath";
+import { useEffect, useState, type ReactNode, useCallback } from "react";
 import axios from "axios";
+import { AuthContext, type User } from "./Auth.context";
 
-interface AuthProviderProps {
-  children: ReactNode;
-}
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<AuthContextType["user"]>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const api = axios.create({
+    baseURL: "http://localhost:3000/api/v1/auth",
+    withCredentials: true,
+  });
 
-  const hasRefreshed = useRef(false);
-
-  // Refresh user
-  const refreshUser = async () => {
-    try {
-      console.log("Refreshing user...");
-      setIsLoading(true);
-      const res = await axiosInstance.get(`${USER_API}/me`);
-      setUser(res.data.data);
-      setIsAuthenticated(true);
-    } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
-        const axiosErr = err;
-        if (axiosErr.response?.status === 401) {
-          setUser(null);
-          setIsAuthenticated(false);
-        } else {
-          console.error(
-            "Failed to refresh user:",
-            axiosErr.message ?? "Unknown axios error",
-          );
-        }
-      } else {
-        console.error("Unknown error:", err);
-      }
-    } finally {
-      setIsLoading(false);
-      console.log("Refresh user finished");
+  // --- Request interceptor to attach token ---
+  api.interceptors.request.use((config) => {
+    if (accessToken) {
+      config.headers = config.headers ?? {};
+      config.headers["Authorization"] = `Bearer ${accessToken}`;
     }
-  };
+    return config;
+  });
 
-  // Auto-refresh on first load (check cookie/session)
-  useEffect(() => {
-    if (!hasRefreshed.current) {
-      hasRefreshed.current = true;
-      refreshUser();
+  // --- Response interceptor for 401 / refresh ---
+  api.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+      const originalRequest = error.config;
+      if (error.response?.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true;
+        try {
+          const refreshRes = await axios.get(
+            "http://localhost:3000/api/v1/auth/refresh-token",
+            { withCredentials: true },
+          );
+          const newToken = refreshRes.data.accessToken;
+          setAccessToken(newToken);
+          localStorage.setItem("accessToken", newToken);
+
+          originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
+          return api.request(originalRequest);
+        } catch {
+          setUser(null);
+          setAccessToken(null);
+          localStorage.removeItem("accessToken");
+          return Promise.reject(error);
+        }
+      }
+      return Promise.reject(error);
+    },
+  );
+
+  const checkAuth = useCallback(async () => {
+    try {
+      const refreshRes = await axios.get(
+        "http://localhost:3000/api/v1/auth/refresh-token",
+        { withCredentials: true },
+      );
+
+      const token = refreshRes.data.accessToken;
+
+      setAccessToken(token);
+
+      const meRes = await api.get("/me", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setUser(meRes.data.user);
+    } catch {
+      setUser(null);
+      setAccessToken(null);
+    } finally {
+      setLoading(false);
     }
   }, []);
-  //   useEffect(() => {
-  //   if (!hasRefreshed.current && window.location.pathname !== "/oauth-redirect") {
-  //     hasRefreshed.current = true;
-  //     refreshUser();
-  //   }
-  // }, []);
 
-  // Login
+  useEffect(() => {
+    void checkAuth();
+  }, [checkAuth]);
+
+  // --- Login ---
   const login = async (email: string, password: string) => {
-    const res = await axiosInstance.post(`${USER_API}/login`, {
-      email,
-      password,
-    });
-    await refreshUser();
-    setUser(res.data.data);
-    setIsAuthenticated(true);
+    try {
+      const res = await api.post("/login", { email, password });
+
+      const token = res.data.accessToken;
+      if (!token) throw new Error("No access token returned");
+
+      setAccessToken(token);
+      localStorage.setItem("accessToken", token);
+      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+      setUser(res.data.user);
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        throw new Error(err.response?.data?.message || "Login failed");
+      }
+
+      throw new Error("Unexpected error");
+    }
   };
 
-  // Register
-  const register = async (data: {
-    email: string;
-    password: string;
-    first_name: string;
-    last_name: string;
-  }) => {
-    const res = await axiosInstance.post(`${USER_API}/register`, data);
-    await refreshUser();
-    setUser(res.data.data);
-    setIsAuthenticated(true);
+  const signup = async (
+    name: string,
+    email: string,
+    password: string,
+    role?: string,
+  ) => {
+    try {
+      const res = await api.post("/register", { name, email, password, role });
+
+      // No token returned, just return message
+      return res.data.message; // "User registered successfully. Please verify your email."
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        throw new Error(err.response?.data?.message || "Signup failed");
+      } else {
+        throw new Error("Unexpected error");
+      }
+    }
   };
 
-  // Logout
+  // --- Logout ---
   const logout = async () => {
-    await axiosInstance.post(`${AUTH_API}/logout`);
+    await api.post("/logout", {}, { withCredentials: true });
     setUser(null);
-    setIsAuthenticated(false);
-  };
-
-  const value: AuthContextType = {
-    user,
-    isAuthenticated,
-    isLoading,
-    login,
-    logout,
-    register,
-    refreshUser,
+    setAccessToken(null);
+    localStorage.removeItem("accessToken");
   };
 
   return (
-    <AuthContext.Provider value={value}>
-      {isLoading ? <div>Loading...</div> : children}
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        login,
+        signup,
+        logout,
+        setUser,
+        setAccessToken,
+        isAuthenticated: !!user,
+        isLoading: loading,
+      }}
+    >
+      {children}
     </AuthContext.Provider>
   );
 };
