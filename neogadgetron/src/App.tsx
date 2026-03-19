@@ -1,20 +1,23 @@
 import { Toaster } from "sonner";
 import { Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/Auth.provider";
-import ProtectedRoute from "./routes/ProtectedRoute";
+import { CartProvider } from "./context/CartProvider";
 import { ThemeProvider } from "./components/Theme/theme-provider";
+
+import ProtectedRoute from "./routes/ProtectedRoute";
+
+// Pages
 import Homepage from "./pages/Homepage";
 import Login from "./pages/Authentication/Login";
 import Signup from "./pages/Authentication/Signup";
 import Unauthorized from "./pages/unauthorzied/Unauthorized";
 import NotFound from "./pages/unauthorzied/NotFound";
-import { CartProvider } from "./context/CartProvider";
-import Cart from "./pages/Cart";
 import OAuthRedirect from "./pages/Authentication/OAuthRedirect";
+import OAuthSuccess from "./pages/Authentication/OAuthRedirect";
+import Cart from "./pages/Cart";
 import Order from "./pages/Order";
 import Profile from "./pages/Profile";
 import Review from "./pages/Review";
-import OAuthSuccess from "./pages/Authentication/OAuthRedirect";
 import ProductDetailPage from "./pages/ProductDetails";
 import CategoryPage from "./pages/Category";
 import WishlistPage from "./pages/WishList";
@@ -25,17 +28,9 @@ const App = () => {
       <CartProvider>
         <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
           <Toaster position="bottom-right" richColors />
-          <Routes>
-            {/* Public Routes  */}
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <Homepage />
-                </ProtectedRoute>
-              }
-            />
 
+          <Routes>
+            {/* Public / Guest Routes */}
             <Route
               path="/login"
               element={
@@ -44,7 +39,6 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
-
             <Route
               path="/register"
               element={
@@ -53,10 +47,18 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
-
             <Route path="/oauth-redirect" element={<OAuthRedirect />} />
+            <Route path="/oauth-success" element={<OAuthSuccess />} />
 
-            {/* Authenticated Route  */}
+            {/* Protected / Authenticated Routes */}
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute allowedRoles={["customer", "seller", "admin"]}>
+                  <Homepage />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/cart"
               element={
@@ -65,7 +67,6 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
-
             <Route
               path="/orders"
               element={
@@ -74,7 +75,6 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
-
             <Route
               path="/profile"
               element={
@@ -83,7 +83,6 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
-
             <Route
               path="/review"
               element={
@@ -101,25 +100,15 @@ const App = () => {
               }
             />
 
-            <Route path="/oauth-success" element={<OAuthSuccess />} />
-
+            {/* Open / Public Pages */}
             <Route path="/category/:slug" element={<CategoryPage />} />
             <Route path="/wishlist" element={<WishlistPage />} />
-            {/* Admin Route  */}
-            {/* <Route
-            path="/admin"
-            element={
-              <ProtectedRoute allowedRoles={["admin"]}>
-                <AdminPanel />
-              </ProtectedRoute>
-            }
-          /> */}
 
-            {/* System Route  */}
+            {/* Unauthorized / 404 */}
             <Route path="/unauthorized" element={<Unauthorized />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </ThemeProvider>{" "}
+        </ThemeProvider>
       </CartProvider>
     </AuthProvider>
   );

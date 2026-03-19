@@ -1,6 +1,7 @@
+import { useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
 import type { Dispatch, SetStateAction } from "react";
+import axios from "axios";
 
 interface Contact {
   name: string;
@@ -14,6 +15,29 @@ interface ContactProps {
 }
 
 export default function ContactForm({ contact, setContact }: ContactProps) {
+  useEffect(() => {
+    async function fetchUser() {
+      try {
+        const res = await axios.get("http://localhost:3000/api/v1/auth/me", {
+          withCredentials: true,
+        });
+
+        const data = res.data;
+
+        setContact({
+          name: `${data.user.first_name || ""} ${data.user.last_name || ""}`.trim(),
+          email: data.user.email || "",
+          phone: contact.phone || "", 
+        });
+      } catch (err) {
+        console.error("Failed to fetch user:", err);
+        // keep default contact if fetch fails
+      }
+    }
+
+    fetchUser();
+  }, [setContact, contact.phone]);
+
   return (
     <Card>
       <CardHeader>

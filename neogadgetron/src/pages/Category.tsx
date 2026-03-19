@@ -5,6 +5,7 @@ import MainLayout from "@/components/layout/MainLayout";
 import { Input } from "@/components/ui/input";
 import type { Product } from "@/types";
 import ProductCard from "@/components/Homepage/ProductCard";
+import { useWishlist } from "@/hooks/useWishlist";
 
 const categoryMap: Record<string, number> = {
   phones: 1,
@@ -14,6 +15,7 @@ const categoryMap: Record<string, number> = {
 };
 
 export default function CategoryPage() {
+  const { toggleWishlist, isInWishlist } = useWishlist();
   const { slug } = useParams();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -70,7 +72,12 @@ export default function CategoryPage() {
         {/* Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
           {filtered.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard
+              key={product.id}
+              product={product}
+              onToggleFavorite={toggleWishlist}
+              isFavorite={isInWishlist(product.id)}
+            />
           ))}
         </div>
       </div>

@@ -40,7 +40,7 @@ export default function Profile() {
         },
         { withCredentials: true },
       );
-      setProfile(res.data.data);
+      setProfile(res.data.user);
       toast.success("Profile updated!");
       setIsModalOpen(false);
     } catch {
