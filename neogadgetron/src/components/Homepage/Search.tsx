@@ -4,6 +4,7 @@ import { createPortal } from "react-dom";
 
 import { Search as SearchIcon } from "lucide-react";
 import { Input } from "../ui/input";
+import { useNavigate } from "react-router-dom";
 
 type Product = {
   id: number;
@@ -12,6 +13,7 @@ type Product = {
 };
 
 export default function Search() {
+  const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
@@ -39,8 +41,12 @@ export default function Search() {
             )}`,
           );
           setResults(res.data.products || []);
-        } catch (err: any) {
-          console.log(err.response?.data || err.message);
+        } catch (err: unknown) {
+          if (axios.isAxiosError(err)) {
+            console.log(err.response?.data);
+          } else {
+            console.log(err);
+          }
         } finally {
           setLoading(false);
         }
@@ -76,7 +82,7 @@ export default function Search() {
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
@@ -95,7 +101,7 @@ export default function Search() {
       {query &&
         createPortal(
           <div
-            className="fixed bg-white dark:bg-gray-800 border rounded shadow z-[9999]"
+            className="fixed bg-white dark:bg-gray-800 border rounded shadow z-9999"
             style={{
               top: position.top,
               left: position.left,
@@ -109,19 +115,20 @@ export default function Search() {
                 {results.map((product) => (
                   <li
                     key={product.id}
-                    className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    onClick={(e) => {
+                      e.stopPropagation(); // 🔥 FIX
+                      navigate(`/products/${product.id}`);
+                      setQuery("");
+                      setResults([]);
+                    }}
+                    className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer flex items-center gap-2"
                   >
-                    <a
-                      href={`/product/${product.id}`}
-                      className="flex items-center gap-2"
-                    >
-                      <img
-                        src={product.image_url}
-                        alt={product.name}
-                        className="h-6 w-6 object-cover rounded"
-                      />
-                      <span>{product.name}</span>
-                    </a>
+                    <img
+                      src={product.image_url}
+                      alt={product.name}
+                      className="h-6 w-6 object-cover rounded"
+                    />
+                    <span>{product.name}</span>
                   </li>
                 ))}
               </ul>

@@ -16,6 +16,8 @@ import Profile from "./pages/Profile";
 import Review from "./pages/Review";
 import OAuthSuccess from "./pages/Authentication/OAuthRedirect";
 import ProductDetailPage from "./pages/ProductDetails";
+import CategoryPage from "./pages/Category";
+import WishlistPage from "./pages/WishList";
 
 const App = () => {
   return (
@@ -100,6 +102,9 @@ const App = () => {
             />
 
             <Route path="/oauth-success" element={<OAuthSuccess />} />
+
+            <Route path="/category/:slug" element={<CategoryPage />} />
+            <Route path="/wishlist" element={<WishlistPage />} />
             {/* Admin Route  */}
             {/* <Route
             path="/admin"
