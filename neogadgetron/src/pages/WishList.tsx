@@ -1,10 +1,9 @@
-import React from "react";
 import MainLayout from "@/components/layout/MainLayout";
 import ProductCard from "@/components/Homepage/ProductCard";
 import { useWishlist } from "@/hooks/useWishlist";
 
 export default function WishlistPage() {
-  const { wishlist, toggleWishlist } = useWishlist();
+  const { wishlist, toggleWishlist, isInWishlist } = useWishlist();
 
   return (
     <MainLayout>
@@ -19,7 +18,8 @@ export default function WishlistPage() {
               <ProductCard
                 key={product.id}
                 product={product}
-                onToggleFavorite={toggleWishlist} // heart button works
+                isFavorite={isInWishlist(product.id)}
+                onToggleFavorite={toggleWishlist}
               />
             ))}
           </div>

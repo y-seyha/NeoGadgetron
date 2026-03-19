@@ -7,17 +7,20 @@ import {
   BarChart2,
   ShoppingCart,
 } from "lucide-react";
+import { FaHeart } from "react-icons/fa";
+import { CiUser } from "react-icons/ci";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import type { AxiosError } from "axios";
 
 const sidebarLinks = [
-  { name: "Profile", icon: Users, path: "/profile" },
+  { name: "Profile", icon: CiUser, path: "/profile" },
   { name: "Home", icon: Home, path: "/" },
   { name: "Cart", icon: Package, path: "/cart" },
   { name: "Orders", icon: ShoppingCart, path: "/orders" },
   { name: "Review", icon: Users, path: "/review" },
+  { name: "Wishlist", icon: FaHeart, path: "/wishlist" },
   { name: "Reports", icon: BarChart2, path: "/reports" },
   { name: "Settings", icon: Settings, path: "/settings" },
 ];

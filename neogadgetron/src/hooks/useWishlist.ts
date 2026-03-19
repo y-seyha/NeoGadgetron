@@ -26,11 +26,13 @@ export function useWishlist() {
   };
 
   const toggleWishlist = (product: Product) => {
-    if (wishlist.find((p) => p.id === product.id)) {
-      removeFromWishlist(product.id);
-    } else {
-      addToWishlist(product);
-    }
+    setWishlist((prev) => {
+      if (prev.find((p) => p.id === product.id)) {
+        return prev.filter((p) => p.id !== product.id); // remove
+      } else {
+        return [...prev, product]; // add
+      }
+    });
   };
 
   const isInWishlist = (productId: number) =>

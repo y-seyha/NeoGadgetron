@@ -7,18 +7,21 @@ import type { Product } from "@/types";
 import { useCart } from "@/hooks/useCart";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useWishlist } from "@/hooks/useWishlist";
 
 interface ProductCardProps {
   product: Product;
-  onToggleFavorite?: (product: Product) => void;
+  isFavorite: boolean;
+  onToggleFavorite: (product: Product) => void; 
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+const ProductCard: React.FC<ProductCardProps> = ({
+  product,
+  isFavorite,
+  onToggleFavorite,
+}) => {
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const [added, setAdded] = useState(false);
-  const { toggleWishlist, isInWishlist } = useWishlist();
 
   const handleAddToCart = async () => {
     try {
@@ -44,13 +47,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       });
 
       setAdded(true);
-
-      // ⏱ hide after 1.5s
       setTimeout(() => setAdded(false), 1500);
     } catch (err) {
       console.error("Failed to add to cart:", err);
     }
   };
+
   return (
     <Card
       onClick={() => navigate(`/products/${product.id}`)}
@@ -65,21 +67,20 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             className="w-full h-full object-cover rounded-lg"
           />
 
-          {/*  Favorite */}
+          {/* Favorite Heart */}
           <button
             onClick={(e) => {
               e.stopPropagation();
-              toggleWishlist(product);
+              onToggleFavorite(product);
             }}
             className="absolute top-2 right-2 bg-white/80 rounded-full p-1 shadow hover:bg-white transition"
           >
             <Heart
-              className={`h-5 w-5 ${
-                isInWishlist(product.id) ? "text-red-500" : "text-gray-400"
-              }`}
+              className={`h-5 w-5 ${isFavorite ? "text-red-500" : "text-gray-400"}`}
             />
           </button>
 
+          {/* Added to cart notification */}
           {added && (
             <span className="absolute top-2 left-2 bg-green-600 text-white text-xs px-2 py-1 rounded-lg">
               Added
@@ -109,7 +110,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           {product.stock > 0 ? (
             <Button
               onClick={(e) => {
-                e.stopPropagation(); //
+                e.stopPropagation();
                 handleAddToCart();
               }}
             >
