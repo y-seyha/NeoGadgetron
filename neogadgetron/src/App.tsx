@@ -15,6 +15,7 @@ import Order from "./pages/Order";
 import Profile from "./pages/Profile";
 import Review from "./pages/Review";
 import OAuthSuccess from "./pages/Authentication/OAuthRedirect";
+import ProductDetailPage from "./pages/ProductDetails";
 
 const App = () => {
   return (
@@ -86,6 +87,14 @@ const App = () => {
               element={
                 <ProtectedRoute allowedRoles={["customer", "seller", "admin"]}>
                   <Review />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/products/:id"
+              element={
+                <ProtectedRoute allowedRoles={["customer", "seller", "admin"]}>
+                  <ProductDetailPage />
                 </ProtectedRoute>
               }
             />

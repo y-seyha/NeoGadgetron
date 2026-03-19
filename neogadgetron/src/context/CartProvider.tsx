@@ -11,6 +11,38 @@ type CartProviderProps = {
 export const CartProvider = ({ children }: CartProviderProps) => {
   const [cart, setCart] = useState<CartItem[]>(getCartItems());
 
+  // const addToCart = (item: Product | CartItem) => {
+  //   const cartItem: CartItem =
+  //     "productId" in item
+  //       ? item // already a CartItem
+  //       : {
+  //           cartId: item.cart_id || 0,
+  //           productId: item.id,
+  //           name: item.name,
+  //           price: item.price,
+  //           quantity: 1,
+  //           image: item.image_url || "",
+  //         };
+
+  //   const existing = cart.find((i) => i.productId === cartItem.productId);
+
+  //   let updated;
+  //   if (existing) {
+  //     updated = cart.map((i) =>
+  //       i.productId === cartItem.productId
+  //         ? { ...i, quantity: i.quantity + 1 }
+  //         : i,
+  //     );
+  //   } else {
+  //     updated = [...cart, cartItem];
+  //   }
+
+  //   setCart(updated);
+  //   setCartItems(updated);
+
+  //   console.log("Cart after adding:", updated);
+  // };
+
   const addToCart = (item: Product | CartItem) => {
     const cartItem: CartItem =
       "productId" in item
@@ -20,7 +52,7 @@ export const CartProvider = ({ children }: CartProviderProps) => {
             productId: item.id,
             name: item.name,
             price: item.price,
-            quantity: 1,
+            quantity: 1, // default if not specified
             image: item.image_url || "",
           };
 
@@ -28,9 +60,10 @@ export const CartProvider = ({ children }: CartProviderProps) => {
 
     let updated;
     if (existing) {
+      // Increment existing quantity by cartItem.quantity
       updated = cart.map((i) =>
         i.productId === cartItem.productId
-          ? { ...i, quantity: i.quantity + 1 }
+          ? { ...i, quantity: i.quantity + cartItem.quantity }
           : i,
       );
     } else {
@@ -39,8 +72,6 @@ export const CartProvider = ({ children }: CartProviderProps) => {
 
     setCart(updated);
     setCartItems(updated);
-
-    console.log("Cart after adding:", updated);
   };
 
   const updateQty = async (productId: number, qty: number) => {

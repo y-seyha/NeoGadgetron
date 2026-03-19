@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import {
   ShoppingCart,
-  Search,
   User,
   Menu,
   X,
@@ -11,7 +10,6 @@ import {
   Moon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useTheme } from "../Theme/theme-provider";
 import {
   DropdownMenu,
@@ -22,6 +20,7 @@ import {
 import { useAuth } from "../../hooks/useAuth";
 import { getInitials } from "@/utils/helper";
 import { useCart } from "@/hooks/useCart";
+import Search from "../Homepage/Search";
 
 type NavbarProps = {
   sidebarOpen: boolean;
@@ -40,7 +39,7 @@ export default function Navbar({
   const { user, isAuthenticated, logout, isLoading } = useAuth();
   const { totalQuantity } = useCart();
   return (
-    <header className="flex items-center justify-between h-16 px-6 bg-background border-b sticky top-0 z-50">
+    <header className="flex items-center justify-between h-16 px-6 bg-background border-b sticky top-0 z-50 overflow-visible">
       <div className="flex items-center gap-4">
         {/* Mobile Sidebar Toggle */}
         <Button
@@ -70,8 +69,7 @@ export default function Navbar({
 
       {/* Search Bar */}
       <div className="hidden md:flex items-center w-full max-w-md mx-6 relative">
-        <Search className="absolute left-3 h-4 w-4 text-muted-foreground" />
-        <Input placeholder="Search products..." className="pl-9" />
+        <Search />
       </div>
 
       {/* Right Section */}

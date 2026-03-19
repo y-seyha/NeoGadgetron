@@ -30,10 +30,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
         { withCredentials: true },
       );
 
-      const cartItemFromBackend = response.data; 
+      const cartItemFromBackend = response.data;
 
       addToCart({
-        id: cartItemFromBackend.id, 
+        id: cartItemFromBackend.id,
         cartId: cartItemFromBackend.cart_id,
         productId: cartItemFromBackend.product_id,
         quantity: cartItemFromBackend.quantity,

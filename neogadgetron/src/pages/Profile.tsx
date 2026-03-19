@@ -14,10 +14,10 @@ export default function Profile() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/v1/users/me", {
+        const res = await axios.get("http://localhost:3000/api/v1/auth/me", {
           withCredentials: true,
         });
-        setProfile(res.data.data);
+        setProfile(res.data.user);
       } catch {
         toast.error("Failed to load profile");
       } finally {

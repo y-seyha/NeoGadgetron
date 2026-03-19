@@ -1,11 +1,11 @@
 import Footer from "@/components/common/Footer";
 import FeaturedCategories from "@/components/Homepage/FeaturedCategories";
-import FeaturedProductsCarousel from "@/components/Homepage/FeaturedProductsCarousel";
 import HomepageCarousel from "@/components/Homepage/HomepageCarousel";
 import ProductCard from "@/components/Homepage/ProductCard";
 import WhyChooseUs from "@/components/Homepage/WhyChooseUs";
 import MainLayout from "@/components/layout/MainLayout";
 import { useProducts } from "@/hooks/useProduct";
+import { Link } from "react-router-dom";
 
 const Homepage = () => {
   const { products, loading, error } = useProducts();
@@ -18,12 +18,20 @@ const Homepage = () => {
       <div>
         <HomepageCarousel />
         <FeaturedCategories />
-        <FeaturedProductsCarousel />
+        {/* <FeaturedProductsCarousel /> */}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mt-8">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+        <div className="mt-8">
+          <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-6">
+            Products
+          </h1>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+            {products.map((product) => (
+              <Link key={product.id} to={`/products/${product.id}`}>
+                <ProductCard product={product} />
+              </Link>
+            ))}
+          </div>
         </div>
 
         <WhyChooseUs />

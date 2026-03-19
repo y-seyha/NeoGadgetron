@@ -38,11 +38,11 @@ export default function ProfileCard({
         <ProfileField label="Last Name" value={profile.last_name} />
         <ProfileField label="Email" value={profile.email} />
         <ProfileField label="Phone" value={profile.phone || "N/A"} />
-        <ProfileField label="Role" value={profile.role} />
-        <ProfileField
+        {/* <ProfileField label="Role" value={profile.role} /> */}
+        {/* <ProfileField
           label="Verified"
           value={profile.is_verified ? "Yes" : "No"}
-        />
+        /> */}
       </CardContent>
     </Card>
   );

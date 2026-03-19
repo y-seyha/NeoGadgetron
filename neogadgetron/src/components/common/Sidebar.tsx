@@ -53,7 +53,7 @@ export default function Sidebar({
   // Desktop sidebar
   const desktopSidebar = (
     <aside
-      className={`hidden md:flex flex-col bg-background border-r transition-all duration-300 z-50 ${
+      className={`hidden md:flex flex-col bg-background border-r transition-all duration-300  ${
         sidebarOpen ? "w-64" : "w-20"
       }`}
     >
