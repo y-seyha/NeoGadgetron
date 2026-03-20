@@ -14,17 +14,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import type { AxiosError } from "axios";
 
-const sidebarLinks = [
-  { name: "Profile", icon: CiUser, path: "/profile" },
-  { name: "Home", icon: Home, path: "/" },
-  { name: "Cart", icon: Package, path: "/cart" },
-  { name: "Orders", icon: ShoppingCart, path: "/orders" },
-  { name: "Review", icon: Users, path: "/review" },
-  { name: "Wishlist", icon: FaHeart, path: "/wishlist" },
-  { name: "Reports", icon: BarChart2, path: "/reports" },
-  { name: "Settings", icon: Settings, path: "/settings" },
-];
-
 type SidebarProps = {
   sidebarOpen: boolean;
   mobileSidebarOpen: boolean;
@@ -37,7 +26,7 @@ export default function Sidebar({
   setMobileSidebarOpen,
 }: SidebarProps) {
   const location = useLocation();
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -53,37 +42,74 @@ export default function Sidebar({
     }
   };
 
-  // Desktop sidebar
+  // -------------------------------
+  // Define links per role
+  // -------------------------------
+  const baseLinks = [
+    { name: "Profile", icon: CiUser, path: "/profile" },
+    { name: "Home", icon: Home, path: "/" },
+    { name: "Cart", icon: Package, path: "/cart" },
+    { name: "Orders", icon: ShoppingCart, path: "/orders" },
+    { name: "Review", icon: Users, path: "/review" },
+    { name: "Wishlist", icon: FaHeart, path: "/wishlist" },
+    { name: "Reports", icon: BarChart2, path: "/reports" },
+    { name: "Settings", icon: Settings, path: "/settings" },
+  ];
+
+  const sellerLinks = [
+    { name: "Seller Dashboard", icon: Home, path: "/seller/dashboard" },
+    { name: "Manage Products", icon: Package, path: "/seller/products" },
+    { name: "Seller Orders", icon: ShoppingCart, path: "/seller/orders" },
+    { name: "Analytics", icon: BarChart2, path: "/seller/analytics" },
+  ];
+
+  const adminLinks = [
+    { name: "Admin Dashboard", icon: Home, path: "/admin" },
+    { name: "Manage Users", icon: Users, path: "/admin/users" },
+    { name: "Manage Products", icon: Package, path: "/admin/products" },
+    { name: "Reports", icon: BarChart2, path: "/admin/reports" },
+  ];
+
+  // Merge links based on user role
+  let linksToShow = [...baseLinks];
+  if (user?.role === "seller") {
+    linksToShow = [...linksToShow, ...sellerLinks];
+  } else if (user?.role === "admin") {
+    linksToShow = [...linksToShow, ...adminLinks];
+  }
+
+  // -------------------------------
+  // Render Sidebar Links
+  // -------------------------------
+  const renderLinks = () =>
+    linksToShow.map((link) => {
+      const isActive = location.pathname === link.path;
+      return (
+        <Link
+          key={link.name}
+          to={link.path}
+          onClick={() => setMobileSidebarOpen(false)}
+          className={`flex items-center gap-3 px-4 py-3 text-sm rounded-lg transition
+            hover:bg-muted
+            ${isActive ? "bg-primary text-white font-semibold" : "text-muted-foreground"}`}
+        >
+          <link.icon className="h-5 w-5" />
+          {sidebarOpen && <span>{link.name}</span>}
+        </Link>
+      );
+    });
+
+  // -------------------------------
+  // Desktop Sidebar
+  // -------------------------------
   const desktopSidebar = (
     <aside
-      className={`hidden md:flex flex-col bg-background border-r transition-all duration-300  ${
+      className={`hidden md:flex flex-col bg-background border-r transition-all duration-300 ${
         sidebarOpen ? "w-64" : "w-20"
       }`}
     >
       <div className="flex-1 flex flex-col justify-between h-full">
-        <nav className="mt-4 space-y-1">
-          {sidebarLinks.map((link) => {
-            const isActive = location.pathname === link.path;
-            return (
-              <Link
-                key={link.name}
-                to={link.path}
-                className={`flex items-center gap-3 px-4 py-3 text-sm rounded-lg transition
-  hover:bg-muted dark:hover:bg-gray-700
-  ${
-    isActive
-      ? "bg-primary text-white font-semibold dark:bg-primary-dark dark:text-gray-900"
-      : "text-muted-foreground dark:text-gray-300"
-  }`}
-              >
-                <link.icon className="h-5 w-5" />
-                {sidebarOpen && <span>{link.name}</span>}
-              </Link>
-            );
-          })}
-        </nav>
-
-        {/* Bottom logout only when sidebarOpen is true */}
+        <nav className="mt-4 space-y-1">{renderLinks()}</nav>
         {sidebarOpen && (
           <div className="px-4 py-4 border-t">
             <Button
@@ -100,7 +126,9 @@ export default function Sidebar({
     </aside>
   );
 
-  // Mobile sidebar overlay
+  // -------------------------------
+  // Mobile Sidebar
+  // -------------------------------
   const mobileSidebar = mobileSidebarOpen && (
     <div className="md:hidden fixed inset-0 z-50 bg-black/30">
       <aside className="fixed left-0 top-0 h-full w-64 bg-background border-r shadow-lg z-50 transition-transform">
@@ -114,36 +142,17 @@ export default function Sidebar({
             X
           </Button>
         </div>
-        <nav className="flex-1 mt-4 space-y-1">
-          {sidebarLinks.map((link) => {
-            const isActive = location.pathname === link.path;
-            return (
-              <Link
-                key={link.name}
-                to={link.path}
-                onClick={() => setMobileSidebarOpen(false)}
-                className={`flex items-center gap-3 px-4 py-3 text-sm rounded-lg transition hover:bg-muted ${
-                  isActive
-                    ? "bg-primary text-white font-semibold"
-                    : "text-muted-foreground"
-                }`}
-              >
-                <link.icon className="h-5 w-5" />
-                <span>{link.name}</span>
-              </Link>
-            );
-          })}
-          <div className="absolute bottom-0 left-0 w-full px-4 py-4 border-t bg-background">
-            <Button
-              variant="outline"
-              size="sm"
-              className="w-full"
-              onClick={handleLogout}
-            >
-              Logout
-            </Button>
-          </div>
-        </nav>
+        <nav className="flex-1 mt-4 space-y-1">{renderLinks()}</nav>
+        <div className="absolute bottom-0 left-0 w-full px-4 py-4 border-t bg-background">
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full"
+            onClick={handleLogout}
+          >
+            Logout
+          </Button>
+        </div>
       </aside>
     </div>
   );

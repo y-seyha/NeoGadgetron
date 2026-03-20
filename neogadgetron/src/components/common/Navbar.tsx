@@ -95,12 +95,6 @@ export default function Navbar({
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-        <Link
-          to="/seller"
-          className="hidden sm:block text-sm font-medium hover:text-primary transition"
-        >
-          Become Seller
-        </Link>
         <Link to="/cart" className="relative">
           <ShoppingCart className="h-5 w-5" />
           <span className="absolute -top-2 -right-2 text-xs bg-primary text-white rounded-full px-1.5 py-0.5 dark:text-black">
@@ -151,6 +145,39 @@ export default function Navbar({
               <User className="h-4 w-4" />
               Login
             </Button>
+          </Link>
+        )}
+        {!isLoading && isAuthenticated && user ? (
+          user.role === "seller" ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button size="sm" variant="secondary">
+                  Seller Dashboard
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem asChild>
+                  <Link to="/seller/me">Seller Profile</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/seller/dashboard">Seller Dashboard</Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Link
+              to="/become-seller"
+              className="hidden sm:block text-sm font-medium hover:text-primary transition"
+            >
+              Become Seller
+            </Link>
+          )
+        ) : (
+          <Link
+            to="/become-seller"
+            className="hidden sm:block text-sm font-medium hover:text-primary transition"
+          >
+            Become Seller
           </Link>
         )}
       </div>

@@ -21,6 +21,8 @@ import Review from "./pages/Review";
 import ProductDetailPage from "./pages/ProductDetails";
 import CategoryPage from "./pages/Category";
 import WishlistPage from "./pages/WishList";
+import BecomeSeller from "./pages/seller/BecomeSeller";
+import SellerProfile from "./pages/seller/SellerProfile";
 
 const App = () => {
   return (
@@ -49,14 +51,13 @@ const App = () => {
             />
             <Route path="/oauth-redirect" element={<OAuthRedirect />} />
             <Route path="/oauth-success" element={<OAuthSuccess />} />
-
             {/* Protected / Authenticated Routes */}
             <Route
               path="/"
               element={
-                <ProtectedRoute allowedRoles={["customer", "seller", "admin"]}>
-                  <Homepage />
-                </ProtectedRoute>
+                // <ProtectedRoute allowedRoles={["customer", "seller", "admin"]}>
+                <Homepage />
+                // </ProtectedRoute>
               }
             />
             <Route
@@ -98,12 +99,43 @@ const App = () => {
                   <ProductDetailPage />
                 </ProtectedRoute>
               }
+            />{" "}
+            {/* Seller  */}
+            <Route
+              path="/become-seller"
+              element={
+                <ProtectedRoute allowedRoles={["customer", "seller", "admin"]}>
+                  <BecomeSeller />
+                </ProtectedRoute>
+              }
             />
-
+            <Route
+              path="/seller/me"
+              element={
+                <ProtectedRoute allowedRoles={["seller", "admin"]}>
+                  <SellerProfile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/seller/products"
+              element={
+                <ProtectedRoute allowedRoles={["seller", "admin"]}>
+                  <SellerProfile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/seller/orders"
+              element={
+                <ProtectedRoute allowedRoles={["seller", "admin"]}>
+                  <SellerProfile />
+                </ProtectedRoute>
+              }
+            />
             {/* Open / Public Pages */}
             <Route path="/category/:slug" element={<CategoryPage />} />
             <Route path="/wishlist" element={<WishlistPage />} />
-
             {/* Unauthorized / 404 */}
             <Route path="/unauthorized" element={<Unauthorized />} />
             <Route path="*" element={<NotFound />} />
