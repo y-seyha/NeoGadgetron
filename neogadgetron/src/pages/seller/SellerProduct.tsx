@@ -237,9 +237,9 @@ const SellerProductsPage = () => {
         </div>
 
         {/* Excel-style products list */}
-        <div className="bg-gray-50 dark:bg-black rounded shadow">
+        <div className="bg-gray-50 dark:bg-black shadow border rounded-2xl">
           {/* Header */}
-          <div className="hidden sm:grid grid-cols-7 bg-gray-100 dark:bg-black p-2 rounded-t font-semibold text-gray-700 dark:text-gray-100">
+          <div className="py-2 hidden sm:grid grid-cols-7 border bg-gray-100 dark:bg-black p-2 rounded-t font-semibold text-gray-700 dark:text-gray-100">
             <div>Image</div>
             <div>Name</div>
             <div>Description</div>
@@ -250,7 +250,7 @@ const SellerProductsPage = () => {
           </div>
 
           {/* Products */}
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1 ">
             {loading ? (
               <p>Loading products...</p>
             ) : filteredProducts.length === 0 ? (
@@ -261,7 +261,7 @@ const SellerProductsPage = () => {
               filteredProducts.map((product) => (
                 <div
                   key={product.id}
-                  className="grid sm:grid-cols-7 gap-2 items-center bg-white dark:bg-black p-2 rounded hover:shadow transition"
+                  className="grid sm:grid-cols-7 gap-2 items-center bg-white dark:bg-black p-2  hover:shadow transition border rounded-lg"
                 >
                   <div>
                     {product.image_url ? (

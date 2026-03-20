@@ -24,6 +24,7 @@ import WishlistPage from "./pages/WishList";
 import BecomeSeller from "./pages/seller/BecomeSeller";
 import SellerProfile from "./pages/seller/SellerProfile";
 import SellerProduct from "./pages/seller/SellerProduct";
+import SellerDashboard from "./pages/seller/SellerDashboard";
 
 const App = () => {
   return (
@@ -33,7 +34,8 @@ const App = () => {
           <Toaster position="bottom-right" richColors />
 
           <Routes>
-            {/* Public / Guest Routes */}
+            {/* Public / Guest Routes */}{" "}
+            <Route path="/" element={<Homepage />} />
             <Route
               path="/login"
               element={
@@ -53,14 +55,6 @@ const App = () => {
             <Route path="/oauth-redirect" element={<OAuthRedirect />} />
             <Route path="/oauth-success" element={<OAuthSuccess />} />
             {/* Protected / Authenticated Routes */}
-            <Route
-              path="/"
-              element={
-                // <ProtectedRoute allowedRoles={["customer", "seller", "admin"]}>
-                <Homepage />
-                // </ProtectedRoute>
-              }
-            />
             <Route
               path="/cart"
               element={
@@ -127,10 +121,10 @@ const App = () => {
               }
             />
             <Route
-              path="/seller/orders"
+              path="/seller/dashboard"
               element={
                 <ProtectedRoute allowedRoles={["seller", "admin"]}>
-                  <SellerProfile />
+                  <SellerDashboard />
                 </ProtectedRoute>
               }
             />

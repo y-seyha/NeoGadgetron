@@ -13,6 +13,14 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import type { AxiosError } from "axios";
+import { useState } from "react";
+
+type LinkItem = {
+  name: string;
+  icon?: React.ComponentType<{ className?: string }>;
+  path?: string;
+  children?: LinkItem[];
+};
 
 type SidebarProps = {
   sidebarOpen: boolean;
@@ -42,10 +50,9 @@ export default function Sidebar({
     }
   };
 
-  // -------------------------------
-  // Define links per role
-  // -------------------------------
-  const baseLinks = [
+  const [sellerOpen, setSellerOpen] = useState(true);
+
+  const baseLinks: LinkItem[] = [
     { name: "Profile", icon: CiUser, path: "/profile" },
     { name: "Home", icon: Home, path: "/" },
     { name: "Cart", icon: Package, path: "/cart" },
@@ -56,52 +63,96 @@ export default function Sidebar({
     { name: "Settings", icon: Settings, path: "/settings" },
   ];
 
-  const sellerLinks = [
-    { name: "Seller Dashboard", icon: Home, path: "/seller/dashboard" },
-    { name: "Manage Products", icon: Package, path: "/seller/products" },
-    { name: "Seller Orders", icon: ShoppingCart, path: "/seller/orders" },
-    { name: "Analytics", icon: BarChart2, path: "/seller/analytics" },
-  ];
-
-  const adminLinks = [
+  const adminLinks: LinkItem[] = [
     { name: "Admin Dashboard", icon: Home, path: "/admin" },
     { name: "Manage Users", icon: Users, path: "/admin/users" },
     { name: "Manage Products", icon: Package, path: "/admin/products" },
     { name: "Reports", icon: BarChart2, path: "/admin/reports" },
   ];
 
-  // Merge links based on user role
-  let linksToShow = [...baseLinks];
+  const linksToShow: LinkItem[] = [...baseLinks];
+
   if (user?.role === "seller") {
-    linksToShow = [...linksToShow, ...sellerLinks];
+    linksToShow.push({
+      name: "Seller",
+      icon: Home, 
+      children: [
+        { name: "Dashboard", icon: Home, path: "/seller/dashboard" },
+        { name: "Products", icon: Package, path: "/seller/products" },
+        { name: "Orders", icon: ShoppingCart, path: "/seller/orders" },
+        { name: "Analytics", icon: BarChart2, path: "/seller/analytics" },
+      ],
+    });
   } else if (user?.role === "admin") {
-    linksToShow = [...linksToShow, ...adminLinks];
+    linksToShow.push(...adminLinks);
   }
 
-  // -------------------------------
-  // Render Sidebar Links
-  // -------------------------------
   const renderLinks = () =>
     linksToShow.map((link) => {
       const isActive = location.pathname === link.path;
+
+      if (link.children) {
+        return (
+          <div key={link.name} className="space-y-1">
+            <button
+              onClick={() => setSellerOpen(!sellerOpen)}
+              className={`flex items-center gap-3 w-full px-4 py-3 text-sm rounded-lg transition
+                text-muted-foreground hover:bg-muted dark:text-muted-foreground-dark dark:hover:bg-muted-dark
+                ${isActive ? "bg-primary text-white font-semibold dark:bg-primary-dark" : ""}
+              `}
+            >
+              {link.icon && <link.icon className="h-5 w-5" />}
+              {sidebarOpen && <span>{link.name}</span>}
+              {sidebarOpen && (
+                <span className="ml-auto">{sellerOpen ? "▲" : "▼"}</span>
+              )}
+            </button>
+
+            {sellerOpen && (
+              <div className="space-y-1 pl-4">
+                {link.children.map((child) => {
+                  const childActive = location.pathname === child.path;
+                  return (
+                    <Link
+                      key={child.path}
+                      to={child.path!}
+                      onClick={() => setMobileSidebarOpen(false)}
+                      className={`flex items-center gap-3 px-4 py-2 text-sm rounded-lg transition
+                        ${
+                          childActive
+                            ? "bg-primary text-white font-semibold dark:bg-primary-dark"
+                            : "text-muted-foreground hover:bg-muted dark:text-muted-foreground-dark dark:hover:bg-muted-dark"
+                        }`}
+                    >
+                      {child.icon && <child.icon className="h-5 w-5" />}
+                      {sidebarOpen && <span>{child.name}</span>}
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        );
+      }
+
       return (
         <Link
-          key={link.name}
-          to={link.path}
+          key={link.path}
+          to={link.path!}
           onClick={() => setMobileSidebarOpen(false)}
           className={`flex items-center gap-3 px-4 py-3 text-sm rounded-lg transition
-            hover:bg-muted
-            ${isActive ? "bg-primary text-white font-semibold" : "text-muted-foreground"}`}
+            ${
+              isActive
+                ? "bg-primary text-white font-semibold dark:bg-primary-dark"
+                : "text-muted-foreground hover:bg-muted dark:text-muted-foreground-dark dark:hover:bg-muted-dark"
+            }`}
         >
-          <link.icon className="h-5 w-5" />
+          {link.icon && <link.icon className="h-5 w-5" />}
           {sidebarOpen && <span>{link.name}</span>}
         </Link>
       );
     });
 
-  // -------------------------------
-  // Desktop Sidebar
-  // -------------------------------
   const desktopSidebar = (
     <aside
       className={`hidden md:flex flex-col bg-background border-r transition-all duration-300 ${
@@ -126,9 +177,6 @@ export default function Sidebar({
     </aside>
   );
 
-  // -------------------------------
-  // Mobile Sidebar
-  // -------------------------------
   const mobileSidebar = mobileSidebarOpen && (
     <div className="md:hidden fixed inset-0 z-50 bg-black/30">
       <aside className="fixed left-0 top-0 h-full w-64 bg-background border-r shadow-lg z-50 transition-transform">

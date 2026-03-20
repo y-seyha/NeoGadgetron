@@ -59,3 +59,24 @@ export interface Review {
     image: string;
   };
 }
+
+export interface OrderItem {
+  id: string;
+  order_item_id: number;
+  order_id: number;
+  product_id: number;
+  product_name: string;
+  quantity: number;
+  item_price: string;
+  status: "pending" | "shipped" | "delivered";
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Analytics {
+  revenue: {
+    total_orders: number;
+    total_revenue: number;
+  };
+  reviews: Review[];
+}
