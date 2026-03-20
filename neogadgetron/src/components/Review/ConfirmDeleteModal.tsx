@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "../ui/button";
 import {
@@ -30,7 +29,7 @@ export const ConfirmDeleteModal: React.FC<ConfirmDeleteProps> = ({
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
-        <p className="text-gray-700 mt-2">{description}</p>
+        <p className="text-gray-700 mt-2 dark:text-white">{description}</p>
         <DialogFooter className="mt-4 flex justify-end gap-2">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel

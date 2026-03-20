@@ -23,6 +23,7 @@ import CategoryPage from "./pages/Category";
 import WishlistPage from "./pages/WishList";
 import BecomeSeller from "./pages/seller/BecomeSeller";
 import SellerProfile from "./pages/seller/SellerProfile";
+import SellerProduct from "./pages/seller/SellerProduct";
 
 const App = () => {
   return (
@@ -121,7 +122,7 @@ const App = () => {
               path="/seller/products"
               element={
                 <ProtectedRoute allowedRoles={["seller", "admin"]}>
-                  <SellerProfile />
+                  <SellerProduct />
                 </ProtectedRoute>
               }
             />
