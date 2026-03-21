@@ -7,7 +7,13 @@ import {
   BarChart2,
   ShoppingCart,
 } from "lucide-react";
-import { FaHeart } from "react-icons/fa";
+import { GrUserManager } from "react-icons/gr";
+import { RiAdminLine, RiSecurePaymentLine } from "react-icons/ri";
+import { MdBorderColor, MdRateReview } from "react-icons/md";
+import { FaHandshakeSimple } from "react-icons/fa6";
+import { AiFillProduct } from "react-icons/ai";
+import { TbCategory } from "react-icons/tb";
+import { FaBox, FaHeart } from "react-icons/fa";
 import { CiUser } from "react-icons/ci";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
@@ -50,7 +56,14 @@ export default function Sidebar({
     }
   };
 
-  const [sellerOpen, setSellerOpen] = useState(true);
+  // Manage open state for collapsible menus
+  const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>({
+    Seller: true,
+    Admin: true,
+  });
+  const toggleMenu = (name: string) => {
+    setOpenMenus((prev) => ({ ...prev, [name]: !prev[name] }));
+  };
 
   const baseLinks: LinkItem[] = [
     { name: "Profile", icon: CiUser, path: "/profile" },
@@ -64,27 +77,42 @@ export default function Sidebar({
   ];
 
   const adminLinks: LinkItem[] = [
-    { name: "Admin Dashboard", icon: Home, path: "/admin" },
-    { name: "Manage Users", icon: Users, path: "/admin/users" },
-    { name: "Manage Products", icon: Package, path: "/admin/products" },
-    { name: "Reports", icon: BarChart2, path: "/admin/reports" },
+    { name: "Admin Dashboard", icon: RiAdminLine, path: "/admin/dashboard" },
+    { name: "Manage Product", icon: AiFillProduct, path: "/admin/products" },
+    { name: "Manage Category", icon: TbCategory, path: "/admin/categories" },
+    { name: "Manage Orders", icon: MdBorderColor, path: "/admin/orders" },
+    {
+      name: "Manage Payments",
+      icon: RiSecurePaymentLine,
+      path: "/admin/payments",
+    },
+    { name: "Manage Reviews", icon: MdRateReview, path: "/admin/reviews" },
+    { name: "Manage Users", icon: GrUserManager, path: "/admin/users" },
+    { name: "Manage Sellers", icon: FaHandshakeSimple, path: "/admin/sellers" },
   ];
 
+  const sellerLinks: LinkItem[] = [
+    { name: "Dashboard", icon: Home, path: "/seller/dashboard" },
+    { name: "Products", icon: Package, path: "/seller/products" },
+    { name: "Orders", icon: ShoppingCart, path: "/seller/orders" },
+    { name: "Analytics", icon: BarChart2, path: "/seller/analytics" },
+  ];
+
+  // Compose links depending on role
   const linksToShow: LinkItem[] = [...baseLinks];
 
   if (user?.role === "seller") {
     linksToShow.push({
       name: "Seller",
-      icon: Home, 
-      children: [
-        { name: "Dashboard", icon: Home, path: "/seller/dashboard" },
-        { name: "Products", icon: Package, path: "/seller/products" },
-        { name: "Orders", icon: ShoppingCart, path: "/seller/orders" },
-        { name: "Analytics", icon: BarChart2, path: "/seller/analytics" },
-      ],
+      icon: Home,
+      children: sellerLinks,
     });
   } else if (user?.role === "admin") {
-    linksToShow.push(...adminLinks);
+    linksToShow.push({
+      name: "Admin",
+      icon: Home,
+      children: adminLinks,
+    });
   }
 
   const renderLinks = () =>
@@ -92,10 +120,12 @@ export default function Sidebar({
       const isActive = location.pathname === link.path;
 
       if (link.children) {
+        const isMenuOpen = openMenus[link.name] ?? false;
+
         return (
           <div key={link.name} className="space-y-1">
             <button
-              onClick={() => setSellerOpen(!sellerOpen)}
+              onClick={() => toggleMenu(link.name)}
               className={`flex items-center gap-3 w-full px-4 py-3 text-sm rounded-lg transition
                 text-muted-foreground hover:bg-muted dark:text-muted-foreground-dark dark:hover:bg-muted-dark
                 ${isActive ? "bg-primary text-white font-semibold dark:bg-primary-dark" : ""}
@@ -104,11 +134,11 @@ export default function Sidebar({
               {link.icon && <link.icon className="h-5 w-5" />}
               {sidebarOpen && <span>{link.name}</span>}
               {sidebarOpen && (
-                <span className="ml-auto">{sellerOpen ? "▲" : "▼"}</span>
+                <span className="ml-auto">{isMenuOpen ? "▲" : "▼"}</span>
               )}
             </button>
 
-            {sellerOpen && (
+            {isMenuOpen && (
               <div className="space-y-1 pl-4">
                 {link.children.map((child) => {
                   const childActive = location.pathname === child.path;
@@ -160,7 +190,10 @@ export default function Sidebar({
       }`}
     >
       <div className="flex-1 flex flex-col justify-between h-full">
-        <nav className="mt-4 space-y-1">{renderLinks()}</nav>
+        {/* Scrollable nav */}
+        <div className="flex-1 overflow-y-auto mt-4 px-2">
+          <nav className="space-y-1">{renderLinks()}</nav>
+        </div>
         {sidebarOpen && (
           <div className="px-4 py-4 border-t">
             <Button
@@ -190,7 +223,10 @@ export default function Sidebar({
             X
           </Button>
         </div>
-        <nav className="flex-1 mt-4 space-y-1">{renderLinks()}</nav>
+        {/* Scrollable nav */}
+        <div className="flex-1 overflow-y-auto mt-4">
+          <nav className="space-y-1">{renderLinks()}</nav>
+        </div>
         <div className="absolute bottom-0 left-0 w-full px-4 py-4 border-t bg-background">
           <Button
             variant="outline"

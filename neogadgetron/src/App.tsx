@@ -25,6 +25,14 @@ import BecomeSeller from "./pages/seller/BecomeSeller";
 import SellerProfile from "./pages/seller/SellerProfile";
 import SellerProduct from "./pages/seller/SellerProduct";
 import SellerDashboard from "./pages/seller/SellerDashboard";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import Product from "./pages/admin/Product";
+import Category from "./pages/admin/Category";
+import Payment from "./pages/admin/Payment";
+import AdminReview from "./pages/admin/Review";
+import User from "./pages/admin/User";
+import Seller from "./pages/admin/Seller";
+import Orders from "./pages/admin/Orders";
 
 const App = () => {
   return (
@@ -128,6 +136,74 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
+            {/* Admin Route  */}{" "}
+            <Route
+              path="/admin/dashboard"
+              element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
+
+               <Route
+              path="/admin/products"
+              element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  <Product />
+                </ProtectedRoute>
+              }
+            />
+               <Route
+              path="/admin/categories"
+              element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  <Category />
+                </ProtectedRoute>
+              }
+            />
+               <Route
+              path="/admin/orders"
+              element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  <Orders />
+                </ProtectedRoute>
+              }
+            />
+               <Route
+              path="/admin/payments"
+              element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  <Payment />
+                </ProtectedRoute>
+              }
+            />
+               <Route
+              path="/admin/reviews"
+              element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  <AdminReview/>
+                </ProtectedRoute>
+              }
+            />
+               <Route
+              path="/admin/users"
+              element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  <User/>
+                </ProtectedRoute>
+              }
+            />
+               <Route
+              path="/admin/sellers"
+              element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  <Seller/>
+                </ProtectedRoute>
+              }
+            />
+
+            
             {/* Open / Public Pages */}
             <Route path="/category/:slug" element={<CategoryPage />} />
             <Route path="/wishlist" element={<WishlistPage />} />
