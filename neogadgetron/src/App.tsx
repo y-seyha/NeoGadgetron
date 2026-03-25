@@ -33,6 +33,8 @@ import AdminReview from "./pages/admin/Review";
 import User from "./pages/admin/User";
 import Seller from "./pages/admin/Seller";
 import Orders from "./pages/admin/Orders";
+import SellerOrdersPage from "./pages/seller/SellerOrdersPage";
+import Analytics from "./pages/seller/Analytics";
 
 const App = () => {
   return (
@@ -121,6 +123,22 @@ const App = () => {
               }
             />
             <Route
+              path="/seller/orders"
+              element={
+                <ProtectedRoute allowedRoles={["seller", "admin"]}>
+                  <SellerOrdersPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/seller/analytics"
+              element={
+                <ProtectedRoute allowedRoles={["seller", "admin"]}>
+                  <Analytics />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/seller/products"
               element={
                 <ProtectedRoute allowedRoles={["seller", "admin"]}>
@@ -145,8 +163,7 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
-
-               <Route
+            <Route
               path="/admin/products"
               element={
                 <ProtectedRoute allowedRoles={["admin"]}>
@@ -154,7 +171,7 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
-               <Route
+            <Route
               path="/admin/categories"
               element={
                 <ProtectedRoute allowedRoles={["admin"]}>
@@ -162,7 +179,7 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
-               <Route
+            <Route
               path="/admin/orders"
               element={
                 <ProtectedRoute allowedRoles={["admin"]}>
@@ -170,7 +187,7 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
-               <Route
+            <Route
               path="/admin/payments"
               element={
                 <ProtectedRoute allowedRoles={["admin"]}>
@@ -178,32 +195,30 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
-               <Route
+            <Route
               path="/admin/reviews"
               element={
                 <ProtectedRoute allowedRoles={["admin"]}>
-                  <AdminReview/>
+                  <AdminReview />
                 </ProtectedRoute>
               }
             />
-               <Route
+            <Route
               path="/admin/users"
               element={
                 <ProtectedRoute allowedRoles={["admin"]}>
-                  <User/>
+                  <User />
                 </ProtectedRoute>
               }
             />
-               <Route
+            <Route
               path="/admin/sellers"
               element={
                 <ProtectedRoute allowedRoles={["admin"]}>
-                  <Seller/>
+                  <Seller />
                 </ProtectedRoute>
               }
             />
-
-            
             {/* Open / Public Pages */}
             <Route path="/category/:slug" element={<CategoryPage />} />
             <Route path="/wishlist" element={<WishlistPage />} />

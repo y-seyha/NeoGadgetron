@@ -30,6 +30,8 @@ export default function Profile() {
   const handleSave = async (updated: UserProfile) => {
     setSaving(true);
     try {
+      setProfile(updated);
+
       const res = await axios.put(
         `http://localhost:3000/api/v1/users/${updated.id}`,
         {
@@ -40,11 +42,20 @@ export default function Profile() {
         },
         { withCredentials: true },
       );
-      setProfile(res.data.user);
+
+    
+      if (res.data?.user) {
+        setProfile(res.data.user);
+      }
+
       toast.success("Profile updated!");
       setIsModalOpen(false);
     } catch {
       toast.error("Failed to update profile");
+      const res = await axios.get("http://localhost:3000/api/v1/auth/me", {
+        withCredentials: true,
+      });
+      setProfile(res.data.user);
     } finally {
       setSaving(false);
     }

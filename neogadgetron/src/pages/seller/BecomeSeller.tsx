@@ -25,6 +25,7 @@ const BecomeSeller = () => {
     store_address: "",
     phone: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -37,6 +38,7 @@ const BecomeSeller = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const payload = { ...form };
@@ -57,6 +59,8 @@ const BecomeSeller = () => {
     } catch (err) {
       const error = err as AxiosError<{ message: string }>;
       toast.error(error?.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -71,7 +75,7 @@ const BecomeSeller = () => {
         </CardHeader>
 
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-3">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
               <Label htmlFor="store_name">Store Name</Label>
               <Input
@@ -120,8 +124,12 @@ const BecomeSeller = () => {
               />
             </div>
 
-            <Button type="submit" className="w-full text-base">
-              Become Seller
+            <Button
+              type="submit"
+              className="w-full text-base"
+              disabled={loading}
+            >
+              {loading ? "Submitting..." : "Become Seller"}
             </Button>
           </form>
         </CardContent>

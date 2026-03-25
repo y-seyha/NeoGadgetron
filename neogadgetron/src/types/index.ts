@@ -19,8 +19,8 @@ export interface Product {
   category_name?: string;
   created_at: string;
   updated_at: string;
-  image_url: string | null;
-  image_public_id: string | null;
+  image_url?: string | null;
+  image_public_id?: string | null;
 }
 
 export interface Shipping {
