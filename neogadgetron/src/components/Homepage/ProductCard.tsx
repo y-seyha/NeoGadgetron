@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
-import noImg from "@/assets/noimg.webp";
+const noImg = "/no-image.jpg";
 import type { Product } from "@/types";
 import { useCart } from "@/hooks/useCart";
 import axios from "axios";
@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 interface ProductCardProps {
   product: Product;
   isFavorite: boolean;
-  onToggleFavorite: (product: Product) => void; 
+  onToggleFavorite: (product: Product) => void;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({

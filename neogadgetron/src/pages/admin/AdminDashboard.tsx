@@ -63,6 +63,7 @@ export default function AdminDashboard() {
       })
       .then((res) => {
         setDashboard(res.data);
+        console.log("Order status from API:", res.data.orderStatus);
         setLoading(false);
       })
       .catch((err) => {

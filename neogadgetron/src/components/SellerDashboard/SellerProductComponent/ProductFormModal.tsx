@@ -1,5 +1,12 @@
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -15,7 +22,12 @@ interface ProductFormModalProps {
   onSaved: () => void;
 }
 
-const ProductFormModal = ({ product, open, onOpenChange, onSaved }: ProductFormModalProps) => {
+const ProductFormModal = ({
+  product,
+  open,
+  onOpenChange,
+  onSaved,
+}: ProductFormModalProps) => {
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
     name: "",
@@ -25,6 +37,13 @@ const ProductFormModal = ({ product, open, onOpenChange, onSaved }: ProductFormM
     category_id: "",
     image: null as File | null,
   });
+
+  const categories = [
+    { id: "1", name: "Phones" },
+    { id: "2", name: "Laptops" },
+    { id: "3", name: "Smart Home" },
+    { id: "4", name: "Accessories" },
+  ];
 
   useEffect(() => {
     if (product) {
@@ -48,12 +67,16 @@ const ProductFormModal = ({ product, open, onOpenChange, onSaved }: ProductFormM
     }
   }, [product]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
     const { name, value, files } = e.target as any;
     if (name === "image" && files) {
-      setForm(prev => ({ ...prev, image: files[0] }));
+      setForm((prev) => ({ ...prev, image: files[0] }));
     } else {
-      setForm(prev => ({ ...prev, [name]: value }));
+      setForm((prev) => ({ ...prev, [name]: value }));
     }
   };
 
@@ -66,10 +89,16 @@ const ProductFormModal = ({ product, open, onOpenChange, onSaved }: ProductFormM
 
     try {
       if (product) {
-        await axios.put(`http://localhost:3000/api/v1/products/${product.id}`, formData, { withCredentials: true });
+        await axios.put(
+          `http://localhost:3000/api/v1/products/${product.id}`,
+          formData,
+          { withCredentials: true },
+        );
         toast.success("Product updated!");
       } else {
-        await axios.post(`http://localhost:3000/api/v1/products`, formData, { withCredentials: true });
+        await axios.post(`http://localhost:3000/api/v1/products`, formData, {
+          withCredentials: true,
+        });
         toast.success("Product created!");
       }
       onSaved();
@@ -94,20 +123,57 @@ const ProductFormModal = ({ product, open, onOpenChange, onSaved }: ProductFormM
         <div className="space-y-4">
           <Label>Name</Label>
           <Input name="name" value={form.name} onChange={handleChange} />
+
           <Label>Description</Label>
-          <Textarea name="description" value={form.description} onChange={handleChange} />
+          <Textarea
+            name="description"
+            value={form.description}
+            onChange={handleChange}
+          />
+
           <Label>Price</Label>
-          <Input name="price" type="number" value={form.price} onChange={handleChange} />
+          <Input
+            name="price"
+            type="number"
+            value={form.price}
+            onChange={handleChange}
+          />
+
           <Label>Stock</Label>
-          <Input name="stock" type="number" value={form.stock} onChange={handleChange} />
-          <Label>Category ID</Label>
-          <Input name="category_id" value={form.category_id} onChange={handleChange} />
+          <Input
+            name="stock"
+            type="number"
+            value={form.stock}
+            onChange={handleChange}
+          />
+
+          <Label>Category</Label>
+          <select
+            name="category_id"
+            value={form.category_id}
+            onChange={handleChange}
+            className="w-full border rounded p-2"
+          >
+            <option value="">Select a category</option>
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
+
           <Label>Image</Label>
           <Input name="image" type="file" onChange={handleChange} />
         </div>
         <DialogFooter>
           <Button onClick={handleSave} disabled={saving}>
-            {saving ? (product ? "Saving..." : "Creating...") : product ? "Save Changes" : "Create Product"}
+            {saving
+              ? product
+                ? "Saving..."
+                : "Creating..."
+              : product
+                ? "Save Changes"
+                : "Create Product"}
           </Button>
         </DialogFooter>
       </DialogContent>

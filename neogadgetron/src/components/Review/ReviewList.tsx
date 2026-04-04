@@ -1,10 +1,10 @@
-
 import React, { useState } from "react";
 import type { Review } from "@/types";
 import axios from "axios";
 import { Button } from "../ui/button";
 import AddReviewModal from "./ReviewModal";
 import { ConfirmDeleteModal } from "./ConfirmDeleteModal";
+import { FaEdit, FaTrash } from "react-icons/fa";
 
 interface Props {
   reviews: Review[];
@@ -51,7 +51,8 @@ const ReviewList: React.FC<Props> = ({
       {reviews.map((review) => {
         const isOwner =
           currentUser &&
-          (currentUser.id === review.user?.id || currentUser.role === "admin");
+          (currentUser.id.toString() === review.user?.id.toString() ||
+            currentUser.role === "admin");
 
         return (
           <div key={review.id} className="border p-4 rounded-lg shadow-sm">
@@ -70,7 +71,7 @@ const ReviewList: React.FC<Props> = ({
               </p>
             )}
 
-            <p className="text-gray-700 mt-2">{review.comment}</p>
+            <p className="text-gray-700 mt-2 font-bold">{review.comment}</p>
 
             <p className="text-sm text-gray-400 mt-2">
               {review.created_at
@@ -98,7 +99,7 @@ const ReviewList: React.FC<Props> = ({
                     });
                   }}
                 >
-                  Edit
+                  <FaEdit />
                 </Button>
 
                 <AddReviewModal
@@ -121,7 +122,7 @@ const ReviewList: React.FC<Props> = ({
                     setConfirmOpen(true);
                   }}
                 >
-                  Delete
+                  <FaTrash />
                 </Button>
 
                 <ConfirmDeleteModal

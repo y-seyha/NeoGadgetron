@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import MainLayout from "@/components/layout/MainLayout";
 import type { UserProfile } from "@/types";
 import ProfileCard from "@/components/Profile/ProfileCard";
+import Loading from "@/components/common/Loading";
 
 export default function Profile() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -43,7 +44,6 @@ export default function Profile() {
         { withCredentials: true },
       );
 
-    
       if (res.data?.user) {
         setProfile(res.data.user);
       }
@@ -61,7 +61,12 @@ export default function Profile() {
     }
   };
 
-  if (loading) return <p>Loading profile...</p>;
+  if (loading)
+    return (
+      <MainLayout>
+        <Loading />
+      </MainLayout>
+    );
   if (!profile) return <p>No profile found</p>;
 
   return (

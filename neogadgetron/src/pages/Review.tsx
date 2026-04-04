@@ -18,7 +18,7 @@ export default function ReviewPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);
 
-  const currentUser = user ? { id: Number(user.id), role: user.role } : null;
+  const currentUser = user ? { id: user.id, role: user.role } : null;
 
   const fetchReviews = async () => {
     try {
@@ -63,7 +63,7 @@ export default function ReviewPage() {
           reviews={reviews}
           currentUser={currentUser}
           onDeleted={fetchReviews}
-          onUpdated={fetchReviews} 
+          onUpdated={fetchReviews}
         />
 
         {/* Pagination */}

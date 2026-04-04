@@ -68,6 +68,7 @@ export default function Sidebar({
   const baseLinks: LinkItem[] = [
     { name: "Profile", icon: CiUser, path: "/profile" },
     { name: "Home", icon: Home, path: "/" },
+    { name: "Home", icon: Home, path: "/ProductDetailPage" },
     { name: "Cart", icon: Package, path: "/cart" },
     { name: "Orders", icon: ShoppingCart, path: "/orders" },
     { name: "Review", icon: Users, path: "/review" },

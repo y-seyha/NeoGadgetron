@@ -16,13 +16,10 @@ const PAGE_SIZE = 8;
 
 const Homepage = () => {
   const [page, setPage] = useState(1);
-  const { products, loading, error, totalPages } = usePaginatedProducts(
-    page,
-    PAGE_SIZE,
-  );
+  const { products, error, totalPages } = usePaginatedProducts(page, PAGE_SIZE);
   const { toggleWishlist, isInWishlist } = useWishlist();
 
-  if (loading) return <p>Loading products...</p>;
+  // if (loading) return <Loading />;
   if (error) return <p>{error}</p>;
 
   return (

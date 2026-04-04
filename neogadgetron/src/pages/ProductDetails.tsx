@@ -8,6 +8,7 @@ import { RelatedProducts } from "@/components/ProductDetails/RelatedProductst";
 import { ProductInfo } from "@/components/ProductDetails/ProductInfo";
 import type { Product } from "@/types";
 import { ProductTabs } from "@/components/ProductDetails/ProductTabs";
+import Loading from "@/components/common/Loading";
 
 export default function ProductDetailPage() {
   const { addToCart } = useCart();
@@ -69,7 +70,7 @@ export default function ProductDetailPage() {
     }
   };
 
-  if (loading || !product) return <p>Loading...</p>;
+  if (loading || !product) return <Loading />;
 
   return (
     <MainLayout>

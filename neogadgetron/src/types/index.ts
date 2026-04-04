@@ -43,6 +43,7 @@ export interface UserProfile {
 export interface Review {
   id: number;
   rating: number;
+  user_id: string;
   comment: string;
   created_at: string;
   user?: {

@@ -15,7 +15,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 }) => {
   const { isAuthenticated, user, isLoading } = useAuth();
 
-  // 1️⃣ Show loader while checking auth
+  // Show loader while checking auth
   if (isLoading)
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -23,21 +23,21 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
       </div>
     );
 
-  // 2️⃣ Guest-only pages (like login/register)
+  // Guest-only pages (like login/register)
   if (guestOnly) {
     if (isAuthenticated) return <Navigate to="/" replace />;
     return <>{children}</>;
   }
 
-  // 3️⃣ Protected routes (must be logged in)
+  // Protected routes (must be logged in)
   if (!isAuthenticated) return <Navigate to="/login" replace />;
 
-  // 4️⃣ Role-based check
+  //  Role-based check
   if (allowedRoles && user && !allowedRoles.includes(user.role)) {
     return <Navigate to="/unauthorized" replace />;
   }
 
-  // 5️⃣ All good, render children
+  // All good, render children
   return <>{children}</>;
 };
 
